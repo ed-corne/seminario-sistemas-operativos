@@ -1,7 +1,10 @@
-import React from 'react'
+import React from "react";
+import Card from "../components/Card";
+import "../styles/card.css";
+import { Link } from "react-router-dom";
+import FormProcess from "../components/FormProcess";
 
 const Process = () => {
-
   console.log("Inicio");
   var interval = setInterval(function () {
     console.log("Pausa cada 2 segundos");
@@ -27,9 +30,22 @@ const Process = () => {
   ];
 
 
-  return (
-    <div>Process</div>
-  )
-}
 
-export default Process
+  return (
+    <>
+    <Card width={"fit-content"} height={"fit-content"} direction={"column"}>
+      <h3>Process Added</h3>
+      <p>0</p>
+    </Card>
+      <Card height={"fit-content"}>
+        <FormProcess/>
+        <button className="card__button">Capture</button>
+        <Link to={"/simulation"} className="card__button --large">
+          Simulate
+        </Link>
+      </Card>
+    </>
+  );
+};
+
+export default Process;
