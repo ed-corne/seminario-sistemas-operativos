@@ -4,7 +4,7 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: #f2f2f2;
+  color: #f4f6fb;
   background-color: #2f2f2f;
 
 }
@@ -43,7 +43,7 @@ button, a {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #2f2f2f;
+  background-color: #192a43;
   cursor: pointer;
   transition: border-color 0.25s;
 }
@@ -61,6 +61,6 @@ button:focus-visible {
     background-color: #f2f2f2;
   }
   button, a{
-    background-color: #6c8ba7;
+    background-color: #c9d3e8;
   }
 }

@@ -1,49 +1,63 @@
-import React from "react";
+import React, { useState } from "react";
 import Card from "../components/Card";
 import "../styles/card.css";
 import { Link } from "react-router-dom";
 import FormProcess from "../components/FormProcess";
+import queryString from "query-string";
 
 const Process = () => {
-  console.log("Inicio");
-  var interval = setInterval(function () {
-    console.log("Pausa cada 2 segundos");
-  }, 2000); // 2000 milisegundos = 2 segundos
+  const [batches, setBatches] = useState([]);
+  const [processCount, setProcessCount] = useState(0);
 
-  // Para detener el intervalo después de cierto tiempo
-  setTimeout(function () {
-    clearInterval(interval);
-    console.log("Fin");
-  }, 10000); // Detiene después de 10 segundos
-
-  const estructura = [
-    [
-      {
-        nombre: "",
-        operacion: "",
-        num1: 0,
-        num2: 0,
-      },
-      {},
-    ],
-    [{}],
-  ];
-
-
+  const handleSimulationClick = () => {
+    const serializedBatches = encodeURIComponent(JSON.stringify(batches));
+    const queryParams = queryString.stringify({ batches: serializedBatches });
+    window.location.href = `/simulation?${queryParams}`;
+  };
 
   return (
     <>
-    <Card width={"fit-content"} height={"fit-content"} direction={"column"}>
-      <h3>Process Added</h3>
-      <p>0</p>
-    </Card>
-      <Card height={"fit-content"}>
-        <FormProcess/>
-        <button className="card__button">Capture</button>
-        <Link to={"/simulation"} className="card__button --large">
-          Simulate
-        </Link>
+      <Card width={"fit-content"} height={"fit-content"} direction={"column"}>
+        <h3>Process Added</h3>
+        <p>{processCount}</p>
       </Card>
+      <Card height={"fit-content"}>
+        <FormProcess
+          batches={batches}
+          setBatches={setBatches}
+          processCount={processCount}
+          setProcessCount={setProcessCount}
+          isDisabled={false}
+          processInEje={null}
+        />
+        <button
+          onClick={handleSimulationClick}
+          className="card__button --large"
+        >
+          Simulate
+        </button>
+
+        {/*<Link to={'/simulation'} className="card__button --large">
+          Simulate
+        </Link>*/}
+      </Card>
+
+      <div>
+        {batches.map((batch, batchIndex) => (
+          <div key={batchIndex}>
+            {batch.map((proceso, procesoIndex) => (
+              <div key={procesoIndex}>
+                <p>Nombre: {proceso.name}</p>
+                <p>Operación: {proceso.operation}</p>
+                <p>Num1: {proceso.number1}</p>
+                <p>Num2: {proceso.number2}</p>
+                <p>max: {proceso.maxTime}</p>
+                <p>id: {proceso.idProgram}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
     </>
   );
 };

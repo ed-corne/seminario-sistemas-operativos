@@ -4,7 +4,7 @@ import React from "react";
 const Card = ({ children, width, height, direction }) => {
   // create a style object for the card to uses the properties thar are passed by the component
     const cardStyle = {
-    background: "#f4f6fb",
+    background: "#6c8ba7",
     borderRadius: "8px",
     padding: "16px",
     margin: "16px",

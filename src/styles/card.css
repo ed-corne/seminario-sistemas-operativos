@@ -14,6 +14,10 @@
     height: 1.8rem;
     margin: 0.5rem 1rem;
     border-radius: 8px;
+    border: none; /* Eliminar el borde por defecto */
+    border-bottom: 3px solid #3b4e6d; /* Agregar el borde inferior */
+    padding: 5px; /* Agregar un poco de espacio alrededor del texto */
+    outline: none; /
 }
 
 .card__button{
@@ -23,3 +27,9 @@
 .--large{
     width: 70%;
 }
+
+@media (prefers-color-scheme: dark) {
+    .card__input, .card__select{
+        color: #2f2f2f;
+    }
+  }
