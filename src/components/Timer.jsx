@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import Card from "./Card";
 
-const Timer = ({ title, time, isRegressive, isLast }) => {
+const Timer = ({ title, time, isRegressive, isLast, isGlobal }) => {
   const [seconds, setSeconds] = useState(isRegressive ? time : 1);
+  const [cont, setCont] = useState(0);
   
   useEffect(() => {
     if (isRegressive && time !== null) {
@@ -12,7 +13,14 @@ const Timer = ({ title, time, isRegressive, isLast }) => {
   
   useEffect(() => {
     let interval;
-    if (time === null && !isLast) {
+    if(isGlobal && cont <=time && isLast) {
+      console.log("global and cont" + cont)
+      interval = setInterval(() => {
+        setSeconds((prevSeconds) => prevSeconds + 1);
+      }, 1000);
+      setCont(cont + 1);
+    }else if (isGlobal && !isLast && cont < time) {
+      console.log("global and last" + cont);
       interval = setInterval(() => {
         setSeconds((prevSeconds) => prevSeconds + 1);
       }, 1000);

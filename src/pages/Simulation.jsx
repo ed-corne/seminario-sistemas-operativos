@@ -102,6 +102,7 @@ const Simulation = (props) => {
               isRegressive={false}
 
               isLast={isLast}
+              isGlobal={false}
             />
             <Timer
               title={"shut down Time"}
@@ -110,12 +111,13 @@ const Simulation = (props) => {
               }
               isRegressive={true}
               isLast={isLast}
+              isGlobal={false}
             />
           </div>
         </Card>
       </div>
       <div className="simulation__right">
-        <Timer title={"Global Time"} time={null} isRegressive={false} isLast={isLast}/>
+        <Timer title={"Global Time"} time={removedElement !== undefined ? removedElement.maxTime : null} isRegressive={false} isLast={isLast} is isGlobal={true}/>
 
         <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <h3>Procesos terminados</h3>
