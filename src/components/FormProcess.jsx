@@ -11,7 +11,7 @@ const FormProcess = (props) => {
   } = props;
 
   const [name, setName] = useState("");
-  const [operation, setOperation] = useState("");
+  const [operation, setOperation] = useState("Addition");
   const [number1, setNumber1] = useState(0);
   const [number2, setNumber2] = useState(0);
   const [maxTime, setMaxTime] = useState(0);
@@ -26,7 +26,7 @@ const FormProcess = (props) => {
       setMaxTime(processInEje.maxTime);
       setIdProgram(processInEje.idProgram);
     }
-  },[])
+  },[processInEje, isDisabled])
   
 
   const handleCapture = () => {
@@ -61,7 +61,7 @@ const FormProcess = (props) => {
   const operations = [
     "Addition",
     "Subtraction",
-    "Miltiplication",
+    "Multiplication",
     "Division",
     "Remainder",
     "Power",

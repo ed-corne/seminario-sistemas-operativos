@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Card from "../components/Card";
 import FormProcess from "../components/FormProcess";
 import "../styles/simulation.css";
-import { useLocation } from 'react-router-dom';
-import queryString from "query-string"; 
+import { useLocation } from "react-router-dom";
+import queryString from "query-string";
+import Timer from "../components/Timer";
+import Calculator from "../components/Calculator";
 
 const Simulation = (props) => {
   const location = useLocation();
@@ -12,17 +14,39 @@ const Simulation = (props) => {
   const decodedBatches = JSON.parse(decodeURIComponent(serializedBatches));
   const [batchesProps, setBatchesProps] = useState(decodedBatches);
   const [removedElement, setRemovedElement] = useState();
-  console.log(batchesProps);
+  const [shouldRender, setShouldRender] = useState(false);
+  const [completeProcess, setCompleteProcess] = useState([]);
+  const [isLast, setIsLast] = useState(false);
 
   useEffect(() => {
-    popFirstElement(); // Ejecutar popFirstElement al cargar la página
-  }, []); // El array de dependencias vacío asegura que se ejecute solo al montar
+    if (batchesProps.length > 0 && batchesProps[0].length > 0) {
+      console.log("entro");
+      const maxTime = batchesProps[0][0].maxTime * 1000;
+      console.log(maxTime);
+
+      setRemovedElement(batchesProps[0][0]);
+      //setIsLast(batchesProps[0].length === 1); // Step 1
+      const timeoutId = setTimeout(() => {
+        popFirstElement();
+        setShouldRender(true);
+        setRemovedElement()
+        //setIsLast(false); // Reset isLast after processing
+      }, maxTime);
+
+      return () => {
+        clearTimeout(timeoutId);
+      };
+    }
+  }, [batchesProps]);
 
   const popFirstElement = () => {
     if (batchesProps.length > 0) {
       const firstArray = [...batchesProps[0]];
-      setRemovedElement(firstArray[0]) // Elimina el primer objeto del primer arreglo
-      firstArray.shift()
+      setCompleteProcess((prevData) => [...prevData, firstArray[0]]);
+      setRemovedElement(firstArray[0]); // Elimina el primer objeto del primer arreglo
+      firstArray.shift();
+      setIsLast(firstArray.length === 1); // Check if the new firstArray is the last element
+
       if (firstArray.length === 0) {
         const newArray = [...batchesProps];
         newArray.shift(); // Elimina el primer arreglo si está vacío
@@ -35,57 +59,73 @@ const Simulation = (props) => {
     }
   };
 
-
   return (
     <div className="simulationPage">
       <div className="simulation__left">
         <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <h3>Lotes Pendientes</h3>
-          <p>{batchesProps.length}</p>
+          <p>{batchesProps.length - 1}</p>
         </Card>
         <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <h3>Lote en ejecucion</h3>
           {batchesProps.length > 0 && batchesProps[0].length > 0 ? (
-          batchesProps[0].map((batch, index) => (
-            <Card
-              height={"fit-content"}
-              width={"fit-conte"}
-              direction={"column"}
-              key={index}
-            >
-              <p>Program Number: {batch.idProgram}</p>
-              <p>Max Time: {batch.maxTime}</p>
-            </Card>
-          ))
-        ) : (
-          <p>No hay lotes en ejecución</p>
-        )}
+            batchesProps[0].map((batch, index) => (
+              <Card
+                height={"fit-content"}
+                width={"fit-conte"}
+                direction={"column"}
+                key={index}
+              >
+                <p>Program Number: {batch.idProgram}</p>
+                <p>Max Time: {batch.maxTime}</p>
+              </Card>
+            ))
+          ) : (
+            <p>No hay lotes en ejecución</p>
+          )}
         </Card>
       </div>
       <div className="simulation__center">
         <h2 className="simulationPage__title">Batch Processing Simulator</h2>
         <Card height={"fit-content"} direction={"column"}>
-          <FormProcess batches={batchesProps} isDisabled={true} processInEje={removedElement}/>
+          <FormProcess
+            batches={batchesProps}
+            isDisabled={true}
+            processInEje={removedElement}
+          />
           <div className="time">
-            <Card height={150} width={"40%"} direction={"column"}>
-              <h3>Transcurred Time</h3>
-              <p>00:00</p>
-            </Card>
-            <Card height={150} width={"40%"} direction={"column"}>
-              <h3>shutdown Time</h3>
-              <p>00:00</p>
-            </Card>
+            <Timer
+              title={"Transcurred Time"}
+              time={
+                removedElement !== undefined  ? removedElement.maxTime : null
+              }
+              isRegressive={false}
+
+              isLast={isLast}
+            />
+            <Timer
+              title={"shut down Time"}
+              time={
+                removedElement !== undefined ? removedElement.maxTime : null
+              }
+              isRegressive={true}
+              isLast={isLast}
+            />
           </div>
         </Card>
       </div>
       <div className="simulation__right">
-        <Card height={"fit-content"} width={"fit-content"}>
-          <p>00:00</p>
-        </Card>
+        <Timer title={"Global Time"} time={null} isRegressive={false} isLast={isLast}/>
 
-        <Card height={"fit-content"} width={"fit-content"}>
+        <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <h3>Procesos terminados</h3>
-          <p>....</p>
+          {completeProcess.length > 0 && shouldRender ? (
+            completeProcess.map((process, index) => (
+              <Calculator key={index} process={process} />
+            ))
+          ) : (
+            <p>No hay procesos terminados</p>
+          )}
         </Card>
       </div>
     </div>
