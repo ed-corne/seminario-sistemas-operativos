@@ -29,7 +29,7 @@ const Simulation = (props) => {
       const timeoutId = setTimeout(() => {
         popFirstElement();
         setShouldRender(true);
-        setRemovedElement()
+        setRemovedElement();
         //setIsLast(false); // Reset isLast after processing
       }, maxTime);
 
@@ -97,10 +97,9 @@ const Simulation = (props) => {
             <Timer
               title={"Transcurred Time"}
               time={
-                removedElement !== undefined  ? removedElement.maxTime : null
+                removedElement !== undefined ? removedElement.maxTime : null
               }
               isRegressive={false}
-
               isLast={isLast}
               isGlobal={false}
             />
@@ -117,7 +116,14 @@ const Simulation = (props) => {
         </Card>
       </div>
       <div className="simulation__right">
-        <Timer title={"Global Time"} time={removedElement !== undefined ? removedElement.maxTime : null} isRegressive={false} isLast={isLast} is isGlobal={true}/>
+        <Timer
+          title={"Global Time"}
+          time={removedElement !== undefined ? removedElement.maxTime : null}
+          isRegressive={false}
+          isLast={isLast}
+          is
+          isGlobal={true}
+        />
 
         <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <h3>Procesos terminados</h3>
