@@ -18,6 +18,45 @@ const Simulation = (props) => {
   const [completeProcess, setCompleteProcess] = useState([]);
   const [isLast, setIsLast] = useState(false);
 
+    ////
+
+    useEffect(() => {
+      const handleKeyPress = (event) => {
+        // Verifica si la tecla presionada es la que deseas usar para interrumpir
+        if (event.keyCode === 27) {
+          // Código 27 es la tecla "Esc"
+          // Aquí puedes agregar el código para interrumpir tu programa
+          // Por ejemplo, puedes detener una animación, cerrar una ventana modal, etc.
+          console.log("Programa interrumpido por la tecla 'Esc'");
+        }
+        if (event.key === "i" || event.key === "I") {
+          console.log("Tecla 'I' presionada");
+        }
+  
+        // Verifica si se presionó la tecla "E"
+        if (event.key === "e" || event.key === "E") {
+          console.log("Tecla 'E' presionada");
+        }
+  
+        // Verifica si se presionó la tecla "P"
+        if (event.key === "p" || event.key === "P") {
+          console.log("Tecla 'P' presionada");
+        }
+  
+        // Verifica si se presionó la tecla "C"
+        if (event.key === "c" || event.key === "C") {
+          console.log("Tecla 'C' presionada");
+        }
+      };
+  
+      // Agrega el evento al documento durante toda la ejecución del componente
+      document.addEventListener("keydown", handleKeyPress);
+  
+      // No se necesita una función de retorno para quitar el evento
+    }, []); // Deja el array de dependencias vacío para que el efecto se ejecute solo una vez cuando el componente se monta
+  
+    ///////
+
   useEffect(() => {
     if (batchesProps.length > 0 && batchesProps[0].length > 0) {
       console.log("entro");
