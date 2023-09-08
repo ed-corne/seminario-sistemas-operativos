@@ -1,61 +1,53 @@
 import React, { useEffect, useState } from "react";
 
 const FormProcess = (props) => {
-  const {
-    batches,
-    setBatches,
-    processCount,
-    setProcessCount,
-    isDisabled,
-    processInEje,
-  } = props;
+  const { batches, setBatches, isDisabled, processInEje } = props;
 
-  const [name, setName] = useState("");
   const [operation, setOperation] = useState("Addition");
   const [number1, setNumber1] = useState(0);
   const [number2, setNumber2] = useState(0);
+  const [processNumber, setProcessNumber] = useState(0);
   const [maxTime, setMaxTime] = useState(0);
   const [idProgram, setIdProgram] = useState(0);
 
-  useEffect(()=> {
-    if(processInEje !== undefined && isDisabled) {
-      setName(processInEje.name);
+  useEffect(() => {
+    if (processInEje !== undefined && isDisabled) {
       setOperation(processInEje.operation);
       setNumber1(processInEje.number1);
       setNumber2(processInEje.number2);
       setMaxTime(processInEje.maxTime);
       setIdProgram(processInEje.idProgram);
     }
-  },[processInEje, isDisabled])
-  
+  }, [processInEje, isDisabled]);
+
 
   const handleCapture = () => {
-    const newProcess = {
-      name: name,
-      operation: operation,
-      number1: number1,
-      number2: number2,
-      maxTime: maxTime,
-      idProgram: idProgram,
-    };
+    setBatches((prevBatches) => {
+      let newProcessBatch = [];
 
-    const lastBatch = batches[batches.length - 1];
-    if (batches.length === 0 || lastBatch.length === 4) {
-      setBatches([...batches, [newProcess]]);
-    } else {
-      const updatedLastBatch = [...lastBatch, newProcess];
-      const newBatches = [...batches.slice(0, -1), updatedLastBatch];
-      setBatches(newBatches);
-    }
+      for (let i = 0; i < processNumber; i++) {
+        const newProcess = {
+          operation: operations[randomNumber(0, operations.length)],
+          number1: randomNumber(0, 10000),
+          number2: randomNumber(0, 10000),
+          maxTime: randomNumber(6, 19),
+          idProgram: i + 1,
+        };
 
-    setProcessCount(processCount + 1);
+        if (newProcessBatch.length === 3) {
+          prevBatches.push(newProcessBatch);
+          newProcessBatch = [];
+        }
 
-    setName("");
-    setOperation("Addition");
-    setNumber1(0);
-    setNumber2(0);
-    setMaxTime(0);
-    setIdProgram(idProgram + 1);
+        newProcessBatch.push(newProcess);
+      }
+
+      if (newProcessBatch.length > 0) {
+        prevBatches.push(newProcessBatch);
+      }
+
+      return [...prevBatches];
+    });
   };
 
   const operations = [
@@ -63,75 +55,82 @@ const FormProcess = (props) => {
     "Subtraction",
     "Multiplication",
     "Division",
-    "Remainder",
-    "Power",
+    "Remainder"
   ];
+
+  const randomNumber = (min, max) => {
+    return Math.floor(Math.random() * (max - min) + min);
+  };
 
   return (
     <>
-      <h2 className="card__title">Process Information</h2>
-      <label className="card__label">Programmer's name</label>
-      <input
-        type="text"
-        placeholder="ed"
-        className="card__input"
-        value={name}
-        disabled={isDisabled}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <label className="card__label">Operation</label>
-      <input
-        type="number"
-        placeholder="num 1"
-        className="card__input"
-        value={number1}
-        disabled={isDisabled}
-        onChange={(e) => setNumber1(e.target.value)}
-      />
-      <select
-        className="card__select"
-        value={operation}
-        disabled={isDisabled}
-        onChange={(e) => setOperation(e.target.value)}
-      >
-        {operations.map((operation, index) => (
-          <option key={index} className="select__option">
-            {operation}
-          </option>
-        ))}
-      </select>
+      {isDisabled ? (
+        <>
+          <label className="card__label">Program number</label>
+          <input
+            type="number"
+            placeholder="1"
+            className="card__input"
+            value={idProgram}
+            disabled
+            onChange={(e) => setIdProgram(e.target.value)}
+          />
 
-      <input
-        type="number"
-        placeholder="num 2"
-        className="card__input"
-        value={number2}
-        disabled={isDisabled}
-        onChange={(e) => setNumber2(e.target.value)}
-      />
-      <label className="card__label">Maximum estimated time</label>
-      <input
-        type="number"
-        placeholder="3"
-        className="card__input"
-        value={maxTime}
-        disabled={isDisabled}
-        onChange={(e) => setMaxTime(e.target.value)}
-      />
-      <label className="card__label">Program number</label>
-      <input
-        type="number"
-        placeholder="1"
-        className="card__input"
-        value={idProgram}
-        disabled
-        onChange={(e) => setIdProgram(e.target.value)}
-      />
-      {!isDisabled ? (
-        <button className="card__button" onClick={handleCapture}>
-          Capture
-        </button>
-      ) : null}
+          <label className="card__label">Operation</label>
+          <input
+            type="number"
+            placeholder="num 1"
+            className="card__input"
+            value={number1}
+            disabled={isDisabled}
+            onChange={(e) => setNumber1(e.target.value)}
+          />
+          <select
+            className="card__select"
+            value={operation}
+            disabled={isDisabled}
+            onChange={(e) => setOperation(e.target.value)}
+          >
+            {operations.map((operation, index) => (
+              <option key={index} className="select__option">
+                {operation}
+              </option>
+            ))}
+          </select>
+
+          <input
+            type="number"
+            placeholder="num 2"
+            className="card__input"
+            value={number2}
+            disabled={isDisabled}
+            onChange={(e) => setNumber2(e.target.value)}
+          />
+          <label className="card__label">Maximum estimated time</label>
+          <input
+            type="number"
+            placeholder="3"
+            className="card__input"
+            value={maxTime}
+            disabled={isDisabled}
+            onChange={(e) => setMaxTime(e.target.value)}
+          />
+        </>
+      ) : (
+        <>
+          <h2 className="card__title">Number of process</h2>
+          <label className="card__label">Select the process to execute</label>
+          <input
+            type="number"
+            placeholder="0"
+            className="card__input"
+            value={processNumber}
+            disabled={isDisabled}
+            onChange={(e) => setProcessNumber(e.target.value)}
+          />
+          <button onClick={handleCapture}>Check</button>
+        </>
+      )}
     </>
   );
 };

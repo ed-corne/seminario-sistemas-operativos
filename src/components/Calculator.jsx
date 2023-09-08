@@ -27,10 +27,6 @@ const Calculator = ({ process }) => {
           setResult(process.number1 % process.number2);
           setSymbol("%");
           break;
-        case "Power":
-          setResult(process.number1 ** process.number2);
-          setSymbol("^");
-          break;
       }
     }
   }, [process]);

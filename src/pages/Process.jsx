@@ -9,6 +9,8 @@ const Process = () => {
   const [batches, setBatches] = useState([]);
   const [processCount, setProcessCount] = useState(0);
 
+  console.log(batches)
+
   const handleSimulationClick = () => {
     const serializedBatches = encodeURIComponent(JSON.stringify(batches));
     const queryParams = queryString.stringify({ batches: serializedBatches });
@@ -17,10 +19,6 @@ const Process = () => {
 
   return (
     <>
-      <Card width={"fit-content"} height={"fit-content"} direction={"column"}>
-        <h3>Process Added</h3>
-        <p>{processCount}</p>
-      </Card>
       <Card height={"fit-content"}>
         <FormProcess
           batches={batches}
@@ -47,7 +45,6 @@ const Process = () => {
           <div key={batchIndex}>
             {batch.map((proceso, procesoIndex) => (
               <div key={procesoIndex}>
-                <p>Nombre: {proceso.name}</p>
                 <p>Operación: {proceso.operation}</p>
                 <p>Num1: {proceso.number1}</p>
                 <p>Num2: {proceso.number2}</p>

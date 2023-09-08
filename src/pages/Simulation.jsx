@@ -36,6 +36,7 @@ const Simulation = (props) => {
         // Verifica si se presionó la tecla "E"
         if (event.key === "e" || event.key === "E") {
           console.log("Tecla 'E' presionada");
+          //popFirstElement();
         }
   
         // Verifica si se presionó la tecla "P"
