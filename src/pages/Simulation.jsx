@@ -18,59 +18,88 @@ const Simulation = (props) => {
   const [completeProcess, setCompleteProcess] = useState([]);
   const [isLast, setIsLast] = useState(false);
 
-    ////
+  //
+  const [interrupted, setInterrupted] = useState(false);
+  let actualElement = null;
+  let actualBatch = [];
+  let isPaused = false;
+  let isError = false;
 
-    useEffect(() => {
-      const handleKeyPress = (event) => {
-        // Verifica si la tecla presionada es la que deseas usar para interrumpir
-        if (event.keyCode === 27) {
-          // Código 27 es la tecla "Esc"
-          // Aquí puedes agregar el código para interrumpir tu programa
-          // Por ejemplo, puedes detener una animación, cerrar una ventana modal, etc.
-          console.log("Programa interrumpido por la tecla 'Esc'");
-        }
+  ////
+
+  useEffect(() => {
+    //console.log(batchesProps);
+    const handleKeyPress = (event) => {
+      // Verifica si la tecla presionada es la que deseas usar para interrumpir
+      if (!interrupted) {
+        //console.log("testt init")
+        //console.log(decodedBatches)
+        //console.log(actualElement)
         if (event.key === "i" || event.key === "I") {
           console.log("Tecla 'I' presionada");
+          // Pasa el proceso actual a la cola
+          if(actualElement){
+            //console.log("decodedBatches");
+            //console.log(decodedBatches);
+          const newActualBatch = [...actualBatch.slice(1), actualElement];
+          //console.log("new actual batch: ");
+          //console.log(newActualBatch);
+          actualBatch = newActualBatch;
+          //console.log("Actual batch: ");
+          //console.log(actualBatch);
+          //console.log("uodate decodedBatches");
+          decodedBatches[0] = actualBatch;
+          //console.log(decodedBatches);
+          //actualElement = null;
         }
-  
-        // Verifica si se presionó la tecla "E"
-        if (event.key === "e" || event.key === "E") {
+         
+          
+        } else if (event.key === "e" || event.key === "E") {
           console.log("Tecla 'E' presionada");
-          //popFirstElement();
-        }
-  
-        // Verifica si se presionó la tecla "P"
-        if (event.key === "p" || event.key === "P") {
+          // Termina el proceso actual y marca con error
+          isError = true;
+          setInterrupted(true);
+        } else if (event.key === "p" || event.key === "P") {
           console.log("Tecla 'P' presionada");
-        }
-  
-        // Verifica si se presionó la tecla "C"
-        if (event.key === "c" || event.key === "C") {
+          // Detiene la ejecución del proceso actual
+          // Puedes agregar aquí la lógica para detener el proceso
+          isPaused = true;
+          setInterrupted(true);
+        } else if (event.key === "c" || event.key === "C") {
           console.log("Tecla 'C' presionada");
+          // Continúa con la ejecución del programa (solo si se pausó previamente)
+          // Puedes agregar aquí la lógica para continuar el programa
+          if (isPaused && actualElement) {
+            isPaused = false;
+          }
+          setInterrupted(false);
         }
-      };
-  
-      // Agrega el evento al documento durante toda la ejecución del componente
-      document.addEventListener("keydown", handleKeyPress);
-  
-      // No se necesita una función de retorno para quitar el evento
-    }, []); // Deja el array de dependencias vacío para que el efecto se ejecute solo una vez cuando el componente se monta
-  
-    ///////
+      }
+    };
+
+    // Agrega el evento al documento durante toda la ejecución del componente
+    document.addEventListener("keydown", handleKeyPress);
+
+    // No se necesita una función de retorno para quitar el evento
+  }, [interrupted]);
+
+  ///////
 
   useEffect(() => {
     if (batchesProps.length > 0 && batchesProps[0].length > 0) {
-      console.log("entro");
+      actualElement = batchesProps[0][0];
+      actualBatch = batchesProps[0];
+      //console.log(actualElement)
       const maxTime = batchesProps[0][0].maxTime * 1000;
-      console.log(maxTime);
 
       setRemovedElement(batchesProps[0][0]);
-      //setIsLast(batchesProps[0].length === 1); // Step 1
+      //console.log(removedElement);
+      setIsLast(batchesProps[0].length === 1); // Step 1
       const timeoutId = setTimeout(() => {
         popFirstElement();
         setShouldRender(true);
         setRemovedElement();
-        //setIsLast(false); // Reset isLast after processing
+        setIsLast(false); // Reset isLast after processing
       }, maxTime);
 
       return () => {

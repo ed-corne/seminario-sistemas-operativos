@@ -9,7 +9,6 @@ const Process = () => {
   const [batches, setBatches] = useState([]);
   const [processCount, setProcessCount] = useState(0);
 
-  console.log(batches)
 
   const handleSimulationClick = () => {
     const serializedBatches = encodeURIComponent(JSON.stringify(batches));

@@ -14,13 +14,11 @@ const Timer = ({ title, time, isRegressive, isLast, isGlobal }) => {
   useEffect(() => {
     let interval;
     if(isGlobal && cont <=time && isLast) {
-      console.log("global and cont" + cont)
       interval = setInterval(() => {
         setSeconds((prevSeconds) => prevSeconds + 1);
       }, 1000);
       setCont(cont + 1);
     }else if (isGlobal && !isLast && cont < time) {
-      console.log("global and last" + cont);
       interval = setInterval(() => {
         setSeconds((prevSeconds) => prevSeconds + 1);
       }, 1000);
