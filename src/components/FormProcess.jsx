@@ -32,6 +32,7 @@ const FormProcess = (props) => {
           number2: randomNumber(0, 10000),
           maxTime: randomNumber(6, 19),
           idProgram: i + 1,
+          error: false,
         };
 
         if (newProcessBatch.length === 3) {

@@ -7,95 +7,94 @@ import queryString from "query-string";
 import Timer from "../components/Timer";
 import Calculator from "../components/Calculator";
 
-const Simulation = (props) => {
+const Simulation = () => {
+  // get the batches from the props
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const serializedBatches = queryParams.batches;
   const decodedBatches = JSON.parse(decodeURIComponent(serializedBatches));
   const [batchesProps, setBatchesProps] = useState(decodedBatches);
+  
+  // variables for the simulation, using useState
   const [removedElement, setRemovedElement] = useState();
   const [shouldRender, setShouldRender] = useState(false);
   const [completeProcess, setCompleteProcess] = useState([]);
   const [isLast, setIsLast] = useState(false);
-
-  //
   const [interrupted, setInterrupted] = useState(false);
+
+  // variables for the simulation
   let actualElement = null;
   let actualBatch = [];
-  let isPaused = false;
+
   let isError = false;
+  let timeoutId = undefined;
 
-  ////
-
+  // this part is executed when the component is loaded,
+  // and is for detect when the keys are pressed
   useEffect(() => {
-    //console.log(batchesProps);
-    const handleKeyPress = (event) => {
-      // Verifica si la tecla presionada es la que deseas usar para interrumpir
+    let isPaused = false;
+
+    const pauseExecution = () => {
+      return new Promise((resolve) => {
+        isPaused = true;
+        // Puedes realizar cualquier otra lógica de pausa necesaria aquí
+        resolve();
+      });
+    };
+
+    const resumeExecution = () => {
+      return new Promise((resolve) => {
+        isPaused = false;
+        // Puedes realizar cualquier otra lógica de reanudación necesaria aquí
+        resolve();
+      });
+    };
+
+    const handleKeyPress = async (event) => {
       if (!interrupted) {
-        //console.log("testt init")
-        //console.log(decodedBatches)
-        //console.log(actualElement)
         if (event.key === "i" || event.key === "I") {
           console.log("Tecla 'I' presionada");
-          // Pasa el proceso actual a la cola
-          if(actualElement){
-            //console.log("decodedBatches");
-            //console.log(decodedBatches);
-          const newActualBatch = [...actualBatch.slice(1), actualElement];
-          //console.log("new actual batch: ");
-          //console.log(newActualBatch);
-          actualBatch = newActualBatch;
-          //console.log("Actual batch: ");
-          //console.log(actualBatch);
-          //console.log("uodate decodedBatches");
-          decodedBatches[0] = actualBatch;
-          //console.log(decodedBatches);
-          //actualElement = null;
-        }
-         
-          
         } else if (event.key === "e" || event.key === "E") {
           console.log("Tecla 'E' presionada");
-          // Termina el proceso actual y marca con error
           isError = true;
-          setInterrupted(true);
+          cancelTimeoutAndExecute();
         } else if (event.key === "p" || event.key === "P") {
           console.log("Tecla 'P' presionada");
-          // Detiene la ejecución del proceso actual
-          // Puedes agregar aquí la lógica para detener el proceso
-          isPaused = true;
-          setInterrupted(true);
+          if (!isPaused) {
+            // Inicia la pausa
+            await pauseExecution();
+          }
         } else if (event.key === "c" || event.key === "C") {
           console.log("Tecla 'C' presionada");
-          // Continúa con la ejecución del programa (solo si se pausó previamente)
-          // Puedes agregar aquí la lógica para continuar el programa
-          if (isPaused && actualElement) {
-            isPaused = false;
+          if (isPaused) {
+            // Sale de la pausa
+            await resumeExecution();
           }
-          setInterrupted(false);
         }
       }
     };
 
-    // Agrega el evento al documento durante toda la ejecución del componente
-    document.addEventListener("keydown", handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
 
-    // No se necesita una función de retorno para quitar el evento
-  }, [interrupted]);
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+}, [interrupted]);
 
-  ///////
 
+  // this part is executed when the component is loaded,
+  // and is for process one by one element in the batches list
   useEffect(() => {
     if (batchesProps.length > 0 && batchesProps[0].length > 0) {
       actualElement = batchesProps[0][0];
       actualBatch = batchesProps[0];
-      //console.log(actualElement)
+      console.log(actualElement);
       const maxTime = batchesProps[0][0].maxTime * 1000;
 
       setRemovedElement(batchesProps[0][0]);
-      //console.log(removedElement);
+
       setIsLast(batchesProps[0].length === 1); // Step 1
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         popFirstElement();
         setShouldRender(true);
         setRemovedElement();
@@ -108,9 +107,25 @@ const Simulation = (props) => {
     }
   }, [batchesProps]);
 
+  // Define una función para cancelar el timeout y ejecutar el código.
+  const cancelTimeoutAndExecute = () => {
+    clearTimeout(timeoutId); // Cancelar el setTimeout
+    popFirstElement();
+    setShouldRender(true);
+    setRemovedElement();
+    setIsLast(false); // Reset isLast after processing
+  };
+
+  //function to remove the first element
   const popFirstElement = () => {
     if (batchesProps.length > 0) {
       const firstArray = [...batchesProps[0]];
+
+      if (isError) {
+        const firstElement = firstArray[0];
+        firstElement.error = true;
+        firstArray[0][0] = firstElement;
+      }
       setCompleteProcess((prevData) => [...prevData, firstArray[0]]);
       setRemovedElement(firstArray[0]); // Elimina el primer objeto del primer arreglo
       firstArray.shift();
@@ -128,6 +143,7 @@ const Simulation = (props) => {
     }
   };
 
+  //build the user interface
   return (
     <div className="simulationPage">
       <div className="simulation__left">

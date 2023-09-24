@@ -7,6 +7,7 @@ import Simulation from './pages/Simulation.jsx';
 import Error from './pages/Error.jsx';
 // import react router
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import App2 from './pages/Test';
 
 const router = createBrowserRouter([
   {
@@ -21,7 +22,10 @@ const router = createBrowserRouter([
   {
     path: '/simulation',
     element: <Simulation/>,
-  
+  },
+  {
+    path: '/app2',
+    element: <App2/>,
   }
 ]);
 
