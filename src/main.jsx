@@ -7,7 +7,7 @@ import Simulation from './pages/Simulation.jsx';
 import Error from './pages/Error.jsx';
 // import react router
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import App2 from './pages/Test';
+import ProcessBatches from './components/ProcessBatches';
 
 const router = createBrowserRouter([
   {
@@ -24,9 +24,9 @@ const router = createBrowserRouter([
     element: <Simulation/>,
   },
   {
-    path: '/app2',
-    element: <App2/>,
-  }
+    path: '/processBatches',
+    element: <ProcessBatches/>,
+  },
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

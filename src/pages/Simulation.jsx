@@ -5,7 +5,7 @@ import "../styles/simulation.css";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import Timer from "../components/Timer";
-import Calculator from "../components/Calculator";
+//import Calculator from "../components/Calculator";
 
 const Simulation = () => {
   // get the batches from the props
@@ -214,7 +214,7 @@ const Simulation = () => {
           <h3>Procesos terminados</h3>
           {completeProcess.length > 0 && shouldRender ? (
             completeProcess.map((process, index) => (
-              <Calculator key={index} process={process} />
+              {/*<Calculator key={index} process={process} />*/}
             ))
           ) : (
             <p>No hay procesos terminados</p>

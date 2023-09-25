@@ -16,6 +16,13 @@ const Process = () => {
     window.location.href = `/simulation?${queryParams}`;
   };
 
+  ///processBatches
+  const handleSimulationClick2 = () => {
+    const serializedBatches = encodeURIComponent(JSON.stringify(batches));
+    const queryParams = queryString.stringify({ batches: serializedBatches });
+    window.location.href = `/processBatches?${queryParams}`;
+  };
+
   return (
     <>
       <Card height={"fit-content"}>
@@ -32,6 +39,13 @@ const Process = () => {
           className="card__button --large"
         >
           Simulate
+        </button>
+
+        <button
+          onClick={handleSimulationClick2}
+          className="card__button --large"
+        >
+          Simulate v2
         </button>
 
         {/*<Link to={'/simulation'} className="card__button --large">
