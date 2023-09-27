@@ -9,7 +9,6 @@ const Process = () => {
   const [batches, setBatches] = useState([]);
   const [processCount, setProcessCount] = useState(0);
 
-
   const handleSimulationClick = () => {
     const serializedBatches = encodeURIComponent(JSON.stringify(batches));
     const queryParams = queryString.stringify({ batches: serializedBatches });
@@ -54,17 +53,13 @@ const Process = () => {
       </Card>
 
       <div>
-        {batches.map((batch, batchIndex) => (
-          <div key={batchIndex}>
-            {batch.map((proceso, procesoIndex) => (
-              <div key={procesoIndex}>
-                <p>Operación: {proceso.operation}</p>
-                <p>Num1: {proceso.number1}</p>
-                <p>Num2: {proceso.number2}</p>
-                <p>max: {proceso.maxTime}</p>
-                <p>id: {proceso.idProgram}</p>
-              </div>
-            ))}
+        {batches.map((proceso, procesoIndex) => (
+          <div key={procesoIndex}>
+            <p>Operación: {proceso.operation}</p>
+            <p>Num1: {proceso.number1}</p>
+            <p>Num2: {proceso.number2}</p>
+            <p>max: {proceso.maxTime}</p>
+            <p>id: {proceso.idProgram}</p>
           </div>
         ))}
       </div>

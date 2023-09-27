@@ -11,7 +11,7 @@ const FormProcess = (props) => {
   const [idProgram, setIdProgram] = useState(0);
 
   useEffect(() => {
-    if (processInEje !== undefined && isDisabled) {
+    if (processInEje !== undefined && isDisabled && processInEje) {
       setOperation(processInEje.operation);
       setNumber1(processInEje.number1);
       setNumber2(processInEje.number2);
@@ -20,7 +20,7 @@ const FormProcess = (props) => {
     }
   }, [processInEje, isDisabled]);
 
-
+  /*
   const handleCapture = () => {
     setBatches((prevBatches) => {
       let newProcessBatch = [];
@@ -50,13 +50,29 @@ const FormProcess = (props) => {
       return [...prevBatches];
     });
   };
+*/
 
+  const handleCapture = () => {
+    // Simplemente agrega un nuevo proceso de ejemplo a la cola
+    for (let i = 0; i < processNumber; i++) {
+      const newProcess = {
+        operation: operations[randomNumber(0, operations.length)],
+        number1: randomNumber(0, 10000),
+        number2: randomNumber(0, 10000),
+        maxTime: randomNumber(6, 19),
+        idProgram: i + 1,
+        error: false,
+      };
+      setBatches((prevQueue) => [...prevQueue, newProcess]);
+    }
+
+  };
   const operations = [
     "Addition",
     "Subtraction",
     "Multiplication",
     "Division",
-    "Remainder"
+    "Remainder",
   ];
 
   const randomNumber = (min, max) => {
