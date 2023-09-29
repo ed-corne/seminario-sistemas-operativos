@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const FormProcess = (props) => {
-  const { batches, setBatches, isDisabled, processInEje } = props;
+  const { batches, setBatches, isDisabled, processInEje, allBatchesProcessed } = props;
 
   const [operation, setOperation] = useState("Addition");
   const [number1, setNumber1] = useState(0);
@@ -17,6 +17,12 @@ const FormProcess = (props) => {
       setNumber2(processInEje.number2);
       setMaxTime(processInEje.maxTime);
       setIdProgram(processInEje.idProgram);
+    }else if (allBatchesProcessed){
+      setOperation("");
+      setNumber1("");
+      setNumber2("");
+      setMaxTime("");
+      setIdProgram("");
     }
   }, [processInEje, isDisabled]);
 
@@ -83,7 +89,7 @@ const FormProcess = (props) => {
     <>
       {isDisabled ? (
         <>
-          <label className="card__label">Program number</label>
+          <label className="card__label">Numero del Programa (ID)</label>
           <input
             type="number"
             placeholder="1"
@@ -93,7 +99,7 @@ const FormProcess = (props) => {
             onChange={(e) => setIdProgram(e.target.value)}
           />
 
-          <label className="card__label">Operation</label>
+          <label className="card__label">Operación</label>
           <input
             type="number"
             placeholder="num 1"
@@ -123,7 +129,7 @@ const FormProcess = (props) => {
             disabled={isDisabled}
             onChange={(e) => setNumber2(e.target.value)}
           />
-          <label className="card__label">Maximum estimated time</label>
+          <label className="card__label">Tiempo Maximo Estimado (TME)</label>
           <input
             type="number"
             placeholder="3"
@@ -135,8 +141,8 @@ const FormProcess = (props) => {
         </>
       ) : (
         <>
-          <h2 className="card__title">Number of process</h2>
-          <label className="card__label">Select the process to execute</label>
+          <h2 className="card__title">Numero de Trabajos Inicial</h2>
+          
           <input
             type="number"
             placeholder="0"
@@ -145,7 +151,7 @@ const FormProcess = (props) => {
             disabled={isDisabled}
             onChange={(e) => setProcessNumber(e.target.value)}
           />
-          <button onClick={handleCapture}>Check</button>
+          <button onClick={handleCapture}>Generar Trabajos</button>
         </>
       )}
     </>

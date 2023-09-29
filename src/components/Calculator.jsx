@@ -33,16 +33,16 @@ const Calculator = ({ process }) => {
           break;
       }
     }else{
-        setResult("error");
+        setResult("ERROR");
     }
   }, [process]);
   return (
-    <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
+    <Card height={"fit-content"} width={"fit-content"} direction={"column"} color={"#d765a0"}>
       <div>
         {process !== undefined ? (
-          "id: " +
+          "ID: " +
           process.idProgram +
-          " → " +
+          " → " + 
           process.number1 +
           " " +
           symbol +

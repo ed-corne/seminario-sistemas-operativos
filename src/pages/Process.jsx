@@ -9,12 +9,6 @@ const Process = () => {
   const [batches, setBatches] = useState([]);
   const [processCount, setProcessCount] = useState(0);
 
-  const handleSimulationClick = () => {
-    const serializedBatches = encodeURIComponent(JSON.stringify(batches));
-    const queryParams = queryString.stringify({ batches: serializedBatches });
-    window.location.href = `/simulation?${queryParams}`;
-  };
-
   ///processBatches
   const handleSimulationClick2 = () => {
     const serializedBatches = encodeURIComponent(JSON.stringify(batches));
@@ -24,7 +18,7 @@ const Process = () => {
 
   return (
     <>
-      <Card height={"fit-content"}>
+      <Card height={"fit-content"} color={"#70cdb2"}>
         <FormProcess
           batches={batches}
           setBatches={setBatches}
@@ -33,23 +27,13 @@ const Process = () => {
           isDisabled={false}
           processInEje={null}
         />
-        <button
-          onClick={handleSimulationClick}
-          className="card__button --large"
-        >
-          Simulate
-        </button>
 
         <button
           onClick={handleSimulationClick2}
           className="card__button --large"
         >
-          Simulate v2
+          Ejecutar Trabajos
         </button>
-
-        {/*<Link to={'/simulation'} className="card__button --large">
-          Simulate
-        </Link>*/}
       </Card>
 
       <div>

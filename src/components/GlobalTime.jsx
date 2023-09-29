@@ -24,9 +24,9 @@ const RelojDigital = ({ allBatchesProcessed }) => {
   return (
     <div>
       <h3>Contador Global</h3>
-      <p>
+      <h3>
         {String(minutos).padStart(2, "0")}:{String(segundos).padStart(2, "0")}
-      </p>
+      </h3>
     </div>
   );
 };

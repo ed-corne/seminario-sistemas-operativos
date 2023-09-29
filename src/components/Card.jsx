@@ -1,10 +1,10 @@
 import React from "react";
 
 // children is used to render all the components that are insaded of the component card(where the component is rendered)
-const Card = ({ children, width, height, direction }) => {
+const Card = ({ children, width, height, direction, color }) => {
   // create a style object for the card to uses the properties thar are passed by the component
     const cardStyle = {
-    background: "#6c8ba7",
+    background: color || "#6c8ba7",
     borderRadius: "8px",
     padding: "16px",
     margin: "16px",
