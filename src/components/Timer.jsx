@@ -12,6 +12,7 @@ const Timer = ({ title, time, isRegressive, isLast, isGlobal }) => {
   }, [isRegressive, time]);
   
   useEffect(() => {
+    if(time !== null) {
     let interval;
     if(isGlobal && cont <=time && isLast) {
       interval = setInterval(() => {
@@ -39,6 +40,7 @@ const Timer = ({ title, time, isRegressive, isLast, isGlobal }) => {
     return () => {
       clearInterval(interval);
     };
+  }
   }, [seconds, time, isRegressive]);
   
 

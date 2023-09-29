@@ -8,6 +8,7 @@ import "../styles/simulation.css";
 import GlobalTime from "./GlobalTime";
 import ShowResult from "./ShowResult";
 import Calculator from "./Calculator.jsx";
+import Timer from "./Timer";
 
 function App() {
   // get the batches from the props
@@ -17,85 +18,100 @@ function App() {
   const decodedBatches = JSON.parse(decodeURIComponent(serializedBatches));
   const [currentProcess, setCurrentProcess] = useState(decodedBatches[0]);
   const [processQueue, setProcessQueue] = useState(decodedBatches.slice(1));
-  //console.log(processQueue)
-  ////////////////////////////////
-  //const [processQueue, setProcessQueue] = useState([]);
   const [paused, setPaused] = useState(false);
   const [completedProcess, setCompletedProcess] = useState([]);
-  const [result, setResult] = useState();
+  const currentPage = 0;
+  const itemsPerPage = 3;
 
-  /*useEffect(()=>{
-      // remove the first element from the process queue
-  //setCurrentProcess(processQueue[0])
-  // Eliminar el proceso actual de la cola
-  //setProcessQueue((prevQueue) => prevQueue.slice(1));
-  }, [])
-*/
+  //timer
+  const [seconds, setSeconds] = useState(0);
+  const [secondsR, setSecondsR] = useState(currentProcess ? currentProcess.maxTime : 0);
+
+const [allBatchesProcessed, setAllBatchesProcessed] = useState(false);
 
   useEffect(() => {
-    const processInterval = setInterval(() => {
+    const interval = setInterval(() => {
       if (!paused) {
-        if (currentProcess) {
-          // Procesar el proceso actual
-          setResult(executeOperation(currentProcess));
-          console.log(`Proceso ${currentProcess.idProgram}: ${result}`);
-
-          setCompletedProcess((prevCompleted) => [
-            ...prevCompleted,
-            currentProcess,
-          ]);
-          // Eliminar el proceso actual de la cola
-          setProcessQueue((prevQueue) => prevQueue.slice(1));
-          setCurrentProcess(null);
-        }
-
-        const nextProcess = processQueue[0];
-        // Obtener el siguiente proceso de la cola
-        if (nextProcess) {
-          setCurrentProcess(nextProcess);
-        } else {
-          clearInterval(processInterval);
-          console.log("La cola de procesos está vacía.");
-        }
+        //console.log('if seconds : ', seconds, '< maxtime: ', currentProcess.maxTime)
+      if (currentProcess && seconds < currentProcess.maxTime) {
+        //console.log(seconds);
+        //console.log(currentProcess);
+        setSeconds((prevSeconds) => prevSeconds + 1);
+        setSecondsR((prevSeconds) => prevSeconds - 1);
+        
+      } else {
+        //console.log('else seconds', seconds);
+        setSeconds(0);
+        clearInterval(interval);
+        setSecondsR(currentProcess ? currentProcess.maxTime : 0);
       }
-    }, 3000);
-
-    return () => clearInterval(processInterval);
-  }, [processQueue, currentProcess, paused]);
-
-  const executeOperation = (process) => {
-    const { number1, number2, operation } = process;
-    let result;
-    switch (operation) {
-      case "Addition":
-        result = number1 + number2;
-        break;
-      case "Subtraction":
-        result = number1 - number2;
-        break;
-      case "Multiplication":
-        result = number1 * number2;
-        break;
-      case "Division":
-        result = number1 / number2;
-        break;
-      case "Remainder":
-        result = number1 % number2;
-      default:
-        result = "Operación no válida";
     }
-    return result;
-  };
+    }, 1000);
 
+    if(processQueue.length === 0 && currentProcess === null){
+      setAllBatchesProcessed(true);
+    }
+    return () => {
+      clearInterval(interval); // Limpia el intervalo cuando el componente se desmonta
+    };
+  }, [seconds, currentProcess, processQueue, paused]);
+
+  // process queue
+  useEffect(() => {
+    //const processInterval = setInterval(
+      //() => {
+        if (!paused) {
+          //console.log('entro !paused');
+          if(currentProcess && seconds === currentProcess.maxTime){
+            //console.log("entro seconds")
+          if (currentProcess) {
+            // Procesar el proceso actual
+            console.log(`Proceso ${currentProcess.idProgram}: `);
+
+            setCompletedProcess((prevCompleted) => [
+              ...prevCompleted,
+              currentProcess,
+            ]);
+            // Eliminar el proceso actual de la cola
+            setProcessQueue((prevQueue) => prevQueue.slice(1));
+            setCurrentProcess(null);
+            setSeconds(0);
+            setSecondsR(processQueue[0] ? processQueue[0].maxTime : 0)
+          }
+
+          const nextProcess = processQueue[0];
+          // Obtener el siguiente proceso de la cola
+          if (nextProcess) {
+            setCurrentProcess(nextProcess);
+          } else {
+            //clearInterval(processInterval);
+            console.log("La cola de procesos está vacía.");
+          }
+        }
+        }
+      //},
+      currentProcess ? currentProcess.maxTime * 1000 : 3000
+    //);
+
+    //return () => clearInterval(processInterval);
+  }, [processQueue, currentProcess, paused, seconds]);
+
+  // function for detecting the keyboard
   const handleKeyPress = (event) => {
     if (currentProcess) {
       switch (event.key) {
         case "I":
         case "i":
           // Pasar el proceso actual a la cola
-          setProcessQueue((prevQueue) => [...prevQueue.slice(1), currentProcess]);
-
+          currentProcess.maxTime = secondsR;
+          console.log(secondsR)
+          setProcessQueue((prevQueue) => [
+            ...prevQueue.slice(1),
+            currentProcess,
+          ]);
           setCurrentProcess(processQueue[0]);
+          setSeconds(0);
+          setSecondsR(processQueue[0] ? processQueue[0].maxTime : 0)
           break;
         case "E":
         case "e":
@@ -110,6 +126,12 @@ function App() {
             currentProcess,
           ]);
           setCurrentProcess(processQueue[0]);
+          setSeconds(0);
+          setSecondsR(processQueue[0] ? processQueue[0].maxTime : 0)
+          if(processQueue.length === 0){
+            setAllBatchesProcessed(true);
+          }
+          
           break;
         case "P":
         case "p":
@@ -127,10 +149,11 @@ function App() {
     }
   };
 
+  //listener for keyboard
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [currentProcess]);
+  }, [currentProcess, secondsR]);
 
   const addProcess = () => {
     // Simplemente agrega un nuevo proceso de ejemplo a la cola
@@ -167,20 +190,22 @@ function App() {
           >
             <h3>Lote en ejecucion</h3>
             {processQueue.length > 0 ? (
-              processQueue.map((process, index) => (
-                <Card
-                  height={"fit-content"}
-                  width={"fit-conte"}
-                  direction={"column"}
-                  key={index}
-                >
-                  <p>Program Number: {process.idProgram}</p>
-                  {/*<p>Max Time: {process.number1}</p>
-                  <p>Max Time: {process.number2}</p>
-              <p>Max Time: {process.operation}</p>*/}
-                  <p>Max Time: {process.maxTime}</p>
-                </Card>
-              ))
+              processQueue
+                .slice(
+                  currentPage * itemsPerPage,
+                  (currentPage + 1) * itemsPerPage
+                )
+                .map((batch, index) => (
+                  <Card
+                    height={"fit-content"}
+                    width={"fit-conte"}
+                    direction={"column"}
+                    key={index}
+                  >
+                    <p>Program Number: {batch.idProgram}</p>
+                    <p>Max Time: {batch.maxTime}</p>
+                  </Card>
+                ))
             ) : (
               <p>No hay lotes en ejecución</p>
             )}
@@ -202,6 +227,12 @@ function App() {
 
             <div className="time">
               {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso */}
+              <Card height={"fit-content"}>
+                <p>{seconds}</p>
+              </Card>
+              <Card height={"fit-content"}>
+                <p>{secondsR}</p>
+              </Card>
             </div>
           </Card>
         </div>
@@ -210,7 +241,7 @@ function App() {
         <div className="simulation__right">
           {/* Contador Global */}
           <Card>
-            <GlobalTime />
+            <GlobalTime allBatchesProcessed={allBatchesProcessed}/>
           </Card>
           {/* Procesos Terminados */}
           <Card
