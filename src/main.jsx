@@ -3,11 +3,11 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import Home from './pages/Home.jsx';
 import Process from './pages/Process.jsx';
-import Simulation from './pages/Simulation.jsx';
+import Simulation from './batches1/Simulation';
 import Error from './pages/Error.jsx';
 // import react router
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
-import ProcessBatches from './components/ProcessBatches';
+import ProcessBatches from './multiprogramming/ProcessBatches';
 
 const router = createBrowserRouter([
   {
@@ -16,7 +16,7 @@ const router = createBrowserRouter([
     errorElement: <Error/>
   },
   {
-    path: '/process',
+    path: '/process/:page',
     element: <Process/>,
   },
   {

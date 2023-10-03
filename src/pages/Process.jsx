@@ -2,10 +2,16 @@ import React, { useState } from "react";
 import Card from "../components/Card";
 import "../styles/card.css";
 import { Link } from "react-router-dom";
-import FormProcess from "../components/FormProcess";
+import FormProcess from "../batches1/FormProcess";
+import GenerateProcess from "../multiprogramming/GenerateProcess";
 import queryString from "query-string";
+import { useParams } from "react-router-dom";
 
 const Process = () => {
+  const { page } = useParams();
+
+  console.log(page);
+
   const [batches, setBatches] = useState([]);
   const [processCount, setProcessCount] = useState(0);
 
@@ -13,20 +19,36 @@ const Process = () => {
   const handleSimulationClick2 = () => {
     const serializedBatches = encodeURIComponent(JSON.stringify(batches));
     const queryParams = queryString.stringify({ batches: serializedBatches });
-    window.location.href = `/processBatches?${queryParams}`;
+    if (page === "batches") {
+      window.location.href = `/simulation?${queryParams}`;
+    }
+    if (page === "multiprogramming") {
+      window.location.href = `/processBatches?${queryParams}`;
+    }
   };
 
   return (
     <>
-      <Card height={"fit-content"} color={"#70cdb2"}>
-        <FormProcess
-          batches={batches}
-          setBatches={setBatches}
-          processCount={processCount}
-          setProcessCount={setProcessCount}
-          isDisabled={false}
-          processInEje={null}
-        />
+      <Card height={"fit-content"} color={page === "batches" ? "#6c8ba7" : "#70cdb2"}>
+        {page === "batches" ? (
+          <FormProcess
+            batches={batches}
+            setBatches={setBatches}
+            processCount={processCount}
+            setProcessCount={setProcessCount}
+            isDisabled={false}
+            processInEje={null}
+          />
+        ) : (
+          <GenerateProcess
+            batches={batches}
+            setBatches={setBatches}
+            processCount={processCount}
+            setProcessCount={setProcessCount}
+            isDisabled={false}
+            processInEje={null}
+          />
+        )}
 
         <button
           onClick={handleSimulationClick2}

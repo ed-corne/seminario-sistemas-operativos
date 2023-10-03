@@ -3,12 +3,10 @@ import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 
 import Card from "../components/Card";
-import FormProcess from "../components/FormProcess";
+import FormProcess from "./GenerateProcess";
 import "../styles/simulation.css";
-import GlobalTime from "./GlobalTime";
-import ShowResult from "./ShowResult";
-import Calculator from "./Calculator.jsx";
-import Timer from "./Timer";
+import GlobalTime from "../components/GlobalTime";
+import Calculator from "../components/Calculator.jsx";
 
 function App() {
   // get the batches from the props
@@ -253,12 +251,12 @@ function App() {
 
             <div className="time">
               {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso */}
-              <Card height={"fit-content"} color={"#a8c5eb"}>
-                <h3>Tiempo Transcurrido</h3>
+              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
+                <h3>Tiempo Transcurrido: </h3>
                 <h3>{seconds}</h3>
               </Card>
-              <Card height={"fit-content"} color={"#a8c5eb"}>
-              <h3>Tiempo Restante</h3>
+              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
+              <h3>Tiempo Restante: </h3>
                 <h3>{secondsR}</h3>
               </Card>
             </div>

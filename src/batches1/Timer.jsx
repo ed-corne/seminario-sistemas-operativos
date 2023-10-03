@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Card from "./Card";
+import Card from "../components/Card";
 
 const Timer = ({ title, time, isRegressive, isLast, isGlobal }) => {
   const [seconds, setSeconds] = useState(isRegressive ? time : 1);
