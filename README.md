@@ -1,6 +1,6 @@
 # 💻Administración y planificación de procesos en sistemas operativos.
 
-**✅En este proyecto se simulan distientos tipos de administracion y planificación de procesos relacionados con los sistemas operativos. Para el desarrollo de este proyecto se uso el lenguage de JavaScript haciendo uso de la tecnologia de ⚛️ React + Vite.**
+**✅En este proyecto se simulan distintos tipos de administracion y planificación de procesos relacionados con los sistemas operativos. Para el desarrollo de este proyecto se uso el lenguage de JavaScript haciendo uso de la tecnologia de ⚛️ React + Vite.**
 
 ## 🍃 Procesamiento por lotes
 Procesamiento por lotes (Batch Processing): Este es un enfoque en el que los programas se agrupan en lotes y se ejecutan en secuencia sin interacción en tiempo real con el usuario. Es común en sistemas informáticos antiguos y se utiliza para procesar grandes cantidades de datos de manera eficiente, donde se carga un lote de trabajos, se ejecutan en orden y luego se carga otro lote.
