@@ -87,7 +87,7 @@ const Simulation = (props) => {
       </div>
       <div className="simulation__center">
         <h2 className="simulationPage__title">Batch Processing Simulator</h2>
-        <Card height={"fit-content"} direction={"column"}>
+        <Card height={"fit-content"} width={"fit-content"} direction={"column"}>
           <FormProcess
             batches={batchesProps}
             isDisabled={true}

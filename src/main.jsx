@@ -8,6 +8,7 @@ import Error from './pages/Error.jsx';
 // import react router
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProcessBatches from './multiprogramming/ProcessBatches';
+import SimulationFCFS from './FCFS/SimulationFCFS';
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     path: '/processBatches',
     element: <ProcessBatches/>,
   },
+  {
+    path: '/simulation-fcfs',
+    element: <SimulationFCFS/>
+  }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

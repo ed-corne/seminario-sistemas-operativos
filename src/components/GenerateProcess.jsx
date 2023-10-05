@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-const FormProcess = (props) => {
+const GenerateProcess = (props) => {
   const { batches, setBatches, isDisabled, processInEje, allBatchesProcessed } = props;
 
   const [operation, setOperation] = useState("Addition");
@@ -25,38 +25,6 @@ const FormProcess = (props) => {
       setIdProgram("");
     }
   }, [processInEje, isDisabled]);
-
-  /*
-  const handleCapture = () => {
-    setBatches((prevBatches) => {
-      let newProcessBatch = [];
-
-      for (let i = 0; i < processNumber; i++) {
-        const newProcess = {
-          operation: operations[randomNumber(0, operations.length)],
-          number1: randomNumber(0, 10000),
-          number2: randomNumber(0, 10000),
-          maxTime: randomNumber(6, 19),
-          idProgram: i + 1,
-          error: false,
-        };
-
-        if (newProcessBatch.length === 3) {
-          prevBatches.push(newProcessBatch);
-          newProcessBatch = [];
-        }
-
-        newProcessBatch.push(newProcess);
-      }
-
-      if (newProcessBatch.length > 0) {
-        prevBatches.push(newProcessBatch);
-      }
-
-      return [...prevBatches];
-    });
-  };
-*/
 
   const handleCapture = () => {
     // Simplemente agrega un nuevo proceso de ejemplo a la cola
@@ -158,4 +126,4 @@ const FormProcess = (props) => {
   );
 };
 
-export default FormProcess;
+export default GenerateProcess;

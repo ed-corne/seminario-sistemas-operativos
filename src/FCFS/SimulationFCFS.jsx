@@ -8,15 +8,15 @@ import "../styles/simulation.css";
 import GlobalTime from "../components/GlobalTime";
 import Calculator from "../components/Calculator.jsx";
 
-function App() {
+const SimulationFCFS = () => {
   // get the batches from the props
   const location = useLocation();
   const queryParams = queryString.parse(location.search);
   const serializedBatches = queryParams.batches;
   const decodedBatches = JSON.parse(decodeURIComponent(serializedBatches));
 
-  const [arrayBatches, setArrayBatches] = useState(decodedBatches);
-  const [processQueue, setProcessQueue] = useState(arrayBatches.slice(1, 3));
+  const [newProcess, setNewProcess] = useState(decodedBatches.slice(3));
+  const [readyProcess, setReadyProcess] = useState(decodedBatches.slice(1, 3));
   const [currentProcess, setCurrentProcess] = useState(decodedBatches[0]);
 
   const [paused, setPaused] = useState(false);
@@ -24,25 +24,28 @@ function App() {
   const currentPage = 0;
   const itemsPerPage = 3;
 
+  //bloeueados
+  const [lockedProcess, setLockedProcess] = useState([]);
+  const [memory, setMemory] = useState(3);
+  const [freeMemory, setFreeMemory] = useState(0);
+
   //timer
   const [seconds, setSeconds] = useState(0);
   const [secondsR, setSecondsR] = useState(
     currentProcess ? currentProcess.maxTime : 0
   );
 
+  let esperando = false;
+
   const [allBatchesProcessed, setAllBatchesProcessed] = useState(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
       if (!paused) {
-        //console.log('if seconds : ', seconds, '< maxtime: ', currentProcess.maxTime)
         if (currentProcess && seconds < currentProcess.maxTime) {
-          //console.log(seconds);
-          //console.log(currentProcess);
           setSeconds((prevSeconds) => prevSeconds + 1);
           setSecondsR((prevSeconds) => prevSeconds - 1);
         } else {
-          //console.log('else seconds', seconds);
           setSeconds(0);
           clearInterval(interval);
           setSecondsR(currentProcess ? currentProcess.maxTime : 0);
@@ -50,22 +53,23 @@ function App() {
       }
     }, 1000);
 
-    if (arrayBatches.length === 0) {
+    if (
+      newProcess.length === 0 &&
+      readyProcess.length === 0 &&
+      lockedProcess.length === 0 &&
+      !currentProcess
+    ) {
       setAllBatchesProcessed(true);
     }
     return () => {
       clearInterval(interval); // Limpia el intervalo cuando el componente se desmonta
     };
-  }, [seconds, currentProcess, processQueue, paused]);
+  }, [seconds, currentProcess, readyProcess, paused, lockedProcess]);
 
   // process queue
   useEffect(() => {
-    //const processInterval = setInterval(
-    //() => {
     if (!paused) {
-      //console.log('entro !paused');
       if (currentProcess && seconds === currentProcess.maxTime) {
-        //console.log("entro seconds")
         if (currentProcess) {
           // Procesar el proceso actual
           console.log(`Proceso ${currentProcess.idProgram}: `);
@@ -75,33 +79,43 @@ function App() {
             currentProcess,
           ]);
           // Eliminar el proceso actual de la cola
-          setProcessQueue((prevQueue) => prevQueue.slice(1));
-          setArrayBatches((prevQueue) => prevQueue.slice(1));
+          setReadyProcess((prev) => prev.slice(1));
+          setNewProcess((prev) => prev.slice(1));
           setCurrentProcess(null);
           setSeconds(0);
-          setSecondsR(processQueue[0] ? processQueue[0].maxTime : 0);
+          setSecondsR(readyProcess[0] ? readyProcess[0].maxTime : 0);
+          setMemory(memory - 1);
         }
-
-        const nextProcess = processQueue[0];
-        // Obtener el siguiente proceso de la cola
-        if (nextProcess) {
-          setCurrentProcess(nextProcess);
-        } else {
-          //clearInterval(processInterval);
-          console.log("La cola de procesos está vacía.");
-          const tempArray = arrayBatches.slice(1, 4);
-          setCurrentProcess(tempArray[0]);
-          setProcessQueue(tempArray.slice(1));
-          setSecondsR(tempArray[0] ? tempArray[0].maxTime : 0);
+        if (newProcess[0] && lockedProcess.length < 2) {
+          setReadyProcess((prev) => [...prev, newProcess[0]]);
         }
+        setCurrentProcess(readyProcess[0] ? readyProcess[0] : newProcess[0]);
       }
     }
-    //},
-    currentProcess ? currentProcess.maxTime * 1000 : 3000;
-    //);
 
-    //return () => clearInterval(processInterval);
-  }, [processQueue, currentProcess, paused, seconds, arrayBatches]);
+    currentProcess ? currentProcess.maxTime * 1000 : 3000;
+  }, [
+    readyProcess,
+    currentProcess,
+    paused,
+    seconds,
+    newProcess,
+    lockedProcess,
+  ]);
+
+  //////
+  async function esperar10Segundos() {
+    // Utiliza una promesa para esperar 10 segundos
+    await new Promise((resolve) => {
+      setTimeout(() => {
+        esperando = false; // Después de esperar, restablecer la bandera
+        resolve();
+      }, 10000); // 10000 milisegundos = 10 segundos
+    });
+
+    // Después de esperar, puedes realizar cualquier tarea que necesites aquí
+    console.log("Han pasado 10 segundos");
+  }
 
   // function for detecting the keyboard
   const handleKeyPress = (event) => {
@@ -109,49 +123,66 @@ function App() {
       switch (event.key) {
         case "I":
         case "i":
-          // Pasar el proceso actual a la cola
-          currentProcess.maxTime = secondsR;
-          console.log(secondsR);
-          setProcessQueue((prevQueue) => [
-            ...prevQueue.slice(1),
-            currentProcess,
-          ]);
-          setCurrentProcess(processQueue[0]);
-          setSeconds(0);
-          setSecondsR(processQueue[0] ? processQueue[0].maxTime : 0);
+          if (lockedProcess.length < 3) {
+            // move Process to locked list
+            currentProcess.maxTime = secondsR;
+            setLockedProcess((prev) => [...prev, currentProcess]);
+
+            setReadyProcess((prev) => prev.slice(1));
+
+            setSeconds(0);
+            setSecondsR(readyProcess[0] ? readyProcess[0].maxTime : 0);
+
+            //nuevo a listos
+            const cont = readyProcess.length + lockedProcess.length + 1;
+            if (newProcess[0] && cont < 3) {
+              setReadyProcess((prev) => [...prev, newProcess[0]]);
+            }
+            setCurrentProcess(readyProcess[0]);
+            //esperar 10s para pasar a listos
+            // Llama a la función asíncrona en segundo plano
+
+            esperar10Segundos().then(() => {
+              console.log("La función esperar10Segundos ha terminado");
+              console.log("locked", lockedProcess[0]);
+              setReadyProcess((prev) => [...prev, currentProcess]);
+              setLockedProcess((prev) => prev.slice(1));
+              console.log("Locked", readyProcess);
+              console.log("new", newProcess);
+              if (readyProcess.length === 0 || newProcess.length - 1 === 0) {
+                console.log("entro lendgt");
+                setCurrentProcess(lockedProcess[0]);
+                setSeconds(0);
+                setSecondsR(lockedProcess[0].maxTime);
+                setReadyProcess((prev) => prev.slice(1));
+              }
+            });
+
+            console.log("El programa principal continúa ejecutándose");
+          }
           break;
         case "E":
         case "e":
-          // Marcar el proceso actual como error y eliminarlo de la cola
-          console.log(
-            `Proceso ${currentProcess.idProgram} marcado como error.`
-          );
-          setProcessQueue((prevQueue) => prevQueue.slice(1));
-          setArrayBatches((prevQueue) => prevQueue.slice(1));
+          setReadyProcess((prev) => prev.slice(1));
+          setNewProcess((prev) => prev.slice(1));
           currentProcess.error = true;
           setCompletedProcess((prevCompleted) => [
             ...prevCompleted,
             currentProcess,
           ]);
-          //
-          const nextProcess = processQueue[0];
-          // Obtener el siguiente proceso de la cola
-          if (nextProcess) {
-            setCurrentProcess(nextProcess);
-            setSeconds(0);
-            setSecondsR(nextProcess.maxTime);
-          } else {
-            //clearInterval(processInterval);
-            console.log("La cola de procesos está vacía.");
-            const tempArray = arrayBatches.slice(1, 4);
-            setCurrentProcess(tempArray[0]);
-            setProcessQueue(tempArray.slice(1));
-            setSeconds(0);
-            setSecondsR(tempArray[0] ? tempArray[0].maxTime : 0);
-          }
-          //setCurrentProcess(processQueue[0]);
 
-          if (arrayBatches.length === 1) {
+          if (newProcess[0] && lockedProcess.length < 2) {
+            setReadyProcess((prev) => [...prev, newProcess[0]]);
+          }
+          setCurrentProcess(readyProcess[0] ? readyProcess[0] : newProcess[0]);
+          setSeconds(0);
+          setSecondsR(readyProcess[0] ? readyProcess[0].maxTime : 0);
+          if (
+            newProcess.length === 1 &&
+            readyProcess.length === 0 &&
+            lockedProcess.length === 0 &&
+            !currentProcess
+          ) {
             setAllBatchesProcessed(true);
           }
 
@@ -181,14 +212,14 @@ function App() {
   const addProcess = () => {
     // Simplemente agrega un nuevo proceso de ejemplo a la cola
     const newProcess = {
-      id: processQueue.length + 1,
+      id: readyProcess.length + 1,
       number1: Math.random() * 10,
       number2: Math.random() * 10,
       operation: ["suma", "resta", "multiplicacion", "division"][
         Math.floor(Math.random() * 4)
       ],
     };
-    setProcessQueue((prevQueue) => [...prevQueue, newProcess]);
+    setReadyProcess((prev) => [...prev, newProcess]);
   };
 
   return (
@@ -201,30 +232,26 @@ function App() {
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#f7d54a"}
+            color={"#ff6bb5"}
           >
-            <h2>Lotes Pendientes</h2>
-            <h3>
-              {Math.round((arrayBatches.length - 2) / 3) === -1
-                ? 0
-                : Math.round((arrayBatches.length - 2) / 3)}
-            </h3>
+            <h3>Procesos en Nuevos</h3>
+            <h3>{Math.round(newProcess.length)}</h3>
           </Card>
           {/* Elementos restantes del Lote en ejecucion */}
           <Card
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#a8c5eb"}
+            color={"#00bfff"}
           >
-            <h3>Lote en Ejecución</h3>
-            {processQueue.length > 0 ? (
-              processQueue.map((batch, index) => (
+            <h3>Procesos en Listos</h3>
+            {readyProcess.length > 0 ? (
+              readyProcess.map((batch, index) => (
                 <Card
                   height={"fit-content"}
                   width={"fit-conte"}
                   direction={"column"}
-                  color={"#70cdb2"}
+                  color={"#b2b2b2"}
                   key={index}
                 >
                   <p>ID: {batch.idProgram}</p>
@@ -232,7 +259,7 @@ function App() {
                 </Card>
               ))
             ) : (
-              <p>No hay lotes en ejecución</p>
+              <p>No hay procesos en Listos</p>
             )}
           </Card>
         </div>
@@ -240,9 +267,14 @@ function App() {
         {/* Centro de la pantalla */}
         <div className="simulation__center">
           {/* Processo actual */}
-          <Card height={"fit-content"} width={"fit-content"} direction={"column"} color={"#70cdb2"}>
-          {paused ? <h3 className="paused">Pausado</h3> : <></>}
-            <h2>Proceso en Ejecución:</h2>
+          <Card
+            height={"fit-content"}
+            width={"800px"}
+            direction={"row"}
+            color={"#7dfa00"}
+          >
+            {paused ? <h3 className="paused">Pausado</h3> : <></>}
+            <h2 className="--mainProcess">Proceso en Ejecución</h2>
             <FormProcess
               isDisabled={true}
               processInEje={currentProcess}
@@ -251,24 +283,50 @@ function App() {
 
             <div className="time">
               {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso */}
-              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
+              <Card
+                height={"fit-content"}
+                width={"fit-content"}
+                color={"#ffc105"}
+              >
                 <h3>Tiempo Transcurrido: </h3>
                 <h3>{seconds}</h3>
               </Card>
-              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
-              <h3>Tiempo Restante: </h3>
+              <Card
+                height={"fit-content"}
+                width={"fit-content"}
+                color={"#ffc105"}
+              >
+                <h3>Tiempo Restante: </h3>
                 <h3>{secondsR}</h3>
               </Card>
             </div>
+          </Card>
+          <Card
+            height={"fit-content"}
+            width={"93%"}
+            direction={"row"}
+            color={"#ff6b6b"}
+          >
+            <h2>Procesos en Bloqueados</h2>
+            {lockedProcess.map((process, index) => (
+              <Card
+                height={"fit-content"}
+                width={"fit-content"}
+                color={"#ffc105"}
+                direction={"column"}
+                key={index}
+              >
+                <p>ID: {process.idProgram}</p>
+                <p>TME: {process.maxTime}</p>
+              </Card>
+            ))}
           </Card>
         </div>
 
         {/* Derecha de la pantalla */}
         <div className="simulation__right">
           {/* Contador Global */}
-          <Card height={"fit-content"}
-            width={"fit-content"}
-            color={"#d765a0"}>
+          <Card height={"fit-content"} width={"fit-content"} color={"#ff8c00"}>
             <GlobalTime allBatchesProcessed={allBatchesProcessed} />
           </Card>
           {/* Procesos Terminados */}
@@ -276,7 +334,7 @@ function App() {
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#ff8d5c"}
+            color={"#6c00fa"}
           >
             <h3>Procesos Terminados</h3>
             {completedProcess.length > 0 ? (
@@ -291,6 +349,6 @@ function App() {
       </div>
     </>
   );
-}
+};
 
-export default App;
+export default SimulationFCFS;

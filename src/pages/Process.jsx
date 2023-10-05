@@ -3,7 +3,7 @@ import Card from "../components/Card";
 import "../styles/card.css";
 import { Link } from "react-router-dom";
 import FormProcess from "../batches1/FormProcess";
-import GenerateProcess from "../multiprogramming/GenerateProcess";
+import GenerateProcess from "../components/GenerateProcess";
 import queryString from "query-string";
 import { useParams } from "react-router-dom";
 
@@ -25,11 +25,23 @@ const Process = () => {
     if (page === "multiprogramming") {
       window.location.href = `/processBatches?${queryParams}`;
     }
+    if (page === "fcfs") {
+      window.location.href = `/simulation-fcfs?${queryParams}`;
+    }
   };
 
   return (
     <>
-      <Card height={"fit-content"} color={page === "batches" ? "#6c8ba7" : "#70cdb2"}>
+      <Card
+        height={"fit-content"}
+        color={
+          page === "batches"
+            ? "#6c8ba7"
+            : page === "multiprogramming"
+            ? "#70cdb2"
+            : "#d48293"
+        }
+      >
         {page === "batches" ? (
           <FormProcess
             batches={batches}
