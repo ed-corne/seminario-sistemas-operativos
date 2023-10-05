@@ -30,6 +30,9 @@ function App() {
     currentProcess ? currentProcess.maxTime : 0
   );
 
+  const [segundos, setSegundos] = useState(0);
+  const [minutos, setMinutos] = useState(0);
+
   const [allBatchesProcessed, setAllBatchesProcessed] = useState(false);
 
   useEffect(() => {
@@ -240,8 +243,13 @@ function App() {
         {/* Centro de la pantalla */}
         <div className="simulation__center">
           {/* Processo actual */}
-          <Card height={"fit-content"} width={"fit-content"} direction={"column"} color={"#70cdb2"}>
-          {paused ? <h3 className="paused">Pausado</h3> : <></>}
+          <Card
+            height={"fit-content"}
+            width={"fit-content"}
+            direction={"column"}
+            color={"#70cdb2"}
+          >
+            {paused ? <h3 className="paused">Pausado</h3> : <></>}
             <h2>Proceso en Ejecución:</h2>
             <FormProcess
               isDisabled={true}
@@ -251,12 +259,20 @@ function App() {
 
             <div className="time">
               {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso */}
-              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
+              <Card
+                height={"fit-content"}
+                width={"fit-content"}
+                color={"#a8c5eb"}
+              >
                 <h3>Tiempo Transcurrido: </h3>
                 <h3>{seconds}</h3>
               </Card>
-              <Card height={"fit-content"} width={"fit-content"} color={"#a8c5eb"}>
-              <h3>Tiempo Restante: </h3>
+              <Card
+                height={"fit-content"}
+                width={"fit-content"}
+                color={"#a8c5eb"}
+              >
+                <h3>Tiempo Restante: </h3>
                 <h3>{secondsR}</h3>
               </Card>
             </div>
@@ -266,10 +282,15 @@ function App() {
         {/* Derecha de la pantalla */}
         <div className="simulation__right">
           {/* Contador Global */}
-          <Card height={"fit-content"}
-            width={"fit-content"}
-            color={"#d765a0"}>
-            <GlobalTime allBatchesProcessed={allBatchesProcessed} />
+          <Card height={"fit-content"} width={"fit-content"} color={"#d765a0"}>
+            <GlobalTime
+              allBatchesProcessed={allBatchesProcessed}
+              segundos={segundos}
+              setSegundos={setSegundos}
+              minutos={minutos}
+              setMinutos={setMinutos}
+              paused={paused}
+            />
           </Card>
           {/* Procesos Terminados */}
           <Card

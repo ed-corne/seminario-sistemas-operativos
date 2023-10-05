@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-const RelojDigital = ({ allBatchesProcessed }) => {
-  const [segundos, setSegundos] = useState(0);
-  const [minutos, setMinutos] = useState(0);
+const RelojDigital = ({ allBatchesProcessed,  segundos, setSegundos, minutos, setMinutos, paused}) => {
+  //const [segundos, setSegundos] = useState(0);
+  //const [minutos, setMinutos] = useState(0);
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (!allBatchesProcessed) {
+      if (!allBatchesProcessed && !paused) {
         // Incrementa el contador de segundos
         setSegundos((prevSegundos) => (prevSegundos + 1) % 60);
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import queryString from "query-string";
 
 import Card from "../components/Card";
@@ -35,13 +35,31 @@ const SimulationFCFS = () => {
     currentProcess ? currentProcess.maxTime : 0
   );
 
+  const [segundos, setSegundos] = useState(0);
+  const [minutos, setMinutos] = useState(0);
+
   let esperando = false;
 
   const [allBatchesProcessed, setAllBatchesProcessed] = useState(false);
 
+  const handleSimulationClick = () => {
+    const serializedBatches = encodeURIComponent(
+      JSON.stringify(completedProcess)
+    );
+    const queryParams = queryString.stringify({
+      completedProcess: serializedBatches,
+    });
+    window.location.href = `/times?${queryParams}`;
+  };
+
   useEffect(() => {
+    if(currentProcess && seconds === 0){ // calculate the response time from any process
+      currentProcess.responseTime = (minutos * 60) + segundos;
+      currentProcess.waitTime = ((minutos * 60) + segundos) - currentProcess.waitTime;
+    }
     const interval = setInterval(() => {
       if (!paused) {
+        currentProcess.serviceTime = currentProcess.serviceTime + 1;
         if (currentProcess && seconds < currentProcess.maxTime) {
           setSeconds((prevSeconds) => prevSeconds + 1);
           setSecondsR((prevSeconds) => prevSeconds - 1);
@@ -73,7 +91,8 @@ const SimulationFCFS = () => {
         if (currentProcess) {
           // Procesar el proceso actual
           console.log(`Proceso ${currentProcess.idProgram}: `);
-
+          currentProcess.completionTime = (minutos * 60) + segundos;
+          currentProcess.returnTime = currentProcess.returnTime + segundos + (minutos * 60);
           setCompletedProcess((prevCompleted) => [
             ...prevCompleted,
             currentProcess,
@@ -87,6 +106,7 @@ const SimulationFCFS = () => {
           setMemory(memory - 1);
         }
         if (newProcess[0] && lockedProcess.length < 2) {
+          newProcess[0].waitTime = (minutos * 60) + segundos;
           setReadyProcess((prev) => [...prev, newProcess[0]]);
         }
         setCurrentProcess(readyProcess[0] ? readyProcess[0] : newProcess[0]);
@@ -136,6 +156,7 @@ const SimulationFCFS = () => {
             //nuevo a listos
             const cont = readyProcess.length + lockedProcess.length + 1;
             if (newProcess[0] && cont < 3) {
+              newProcess[0].waitTime = (minutos * 60) + segundos;
               setReadyProcess((prev) => [...prev, newProcess[0]]);
             }
             setCurrentProcess(readyProcess[0]);
@@ -145,6 +166,8 @@ const SimulationFCFS = () => {
             esperar10Segundos().then(() => {
               console.log("La función esperar10Segundos ha terminado");
               console.log("locked", lockedProcess[0]);
+              currentProcess.returnTime = currentProcess.returnTime + 10;
+              newProcess[0].waitTime = (minutos * 60) + segundos;
               setReadyProcess((prev) => [...prev, currentProcess]);
               setLockedProcess((prev) => prev.slice(1));
               console.log("Locked", readyProcess);
@@ -166,12 +189,15 @@ const SimulationFCFS = () => {
           setReadyProcess((prev) => prev.slice(1));
           setNewProcess((prev) => prev.slice(1));
           currentProcess.error = true;
+          currentProcess.completionTime = (minutos * 60) + segundos;
+          currentProcess.returnTime = currentProcess.returnTime + segundos + (minutos * 60);
           setCompletedProcess((prevCompleted) => [
             ...prevCompleted,
             currentProcess,
           ]);
 
           if (newProcess[0] && lockedProcess.length < 2) {
+            newProcess[0].waitTime = (minutos * 60) + segundos;
             setReadyProcess((prev) => [...prev, newProcess[0]]);
           }
           setCurrentProcess(readyProcess[0] ? readyProcess[0] : newProcess[0]);
@@ -321,13 +347,31 @@ const SimulationFCFS = () => {
               </Card>
             ))}
           </Card>
+          {allBatchesProcessed ? (
+            <Card height={"fit-content"} width={"93%"} color={"#6be1ff"}>
+              <h3>Se han ejecutado todos los Procesos</h3>
+              <button
+                onClick={handleSimulationClick}
+                className="card__button --large"
+              >
+                Ver Tiempos de los procesos
+              </button>
+            </Card>
+          ) : null}
         </div>
 
         {/* Derecha de la pantalla */}
         <div className="simulation__right">
           {/* Contador Global */}
           <Card height={"fit-content"} width={"fit-content"} color={"#ff8c00"}>
-            <GlobalTime allBatchesProcessed={allBatchesProcessed} />
+            <GlobalTime
+              allBatchesProcessed={allBatchesProcessed}
+              segundos={segundos}
+              setSegundos={setSegundos}
+              minutos={minutos}
+              setMinutos={setMinutos}
+              paused={paused}
+            />
           </Card>
           {/* Procesos Terminados */}
           <Card

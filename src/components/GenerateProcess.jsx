@@ -36,6 +36,12 @@ const GenerateProcess = (props) => {
         maxTime: randomNumber(6, 19),
         idProgram: i + 1,
         error: false,
+        arrivalTime: 0,
+        completionTime: 0,
+        returnTime: 0,
+        responseTime: 0,
+        waitTime: 0,
+        serviceTime: 0,
       };
       setBatches((prevQueue) => [...prevQueue, newProcess]);
     }

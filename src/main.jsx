@@ -9,6 +9,7 @@ import Error from './pages/Error.jsx';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProcessBatches from './multiprogramming/ProcessBatches';
 import SimulationFCFS from './FCFS/SimulationFCFS';
+import TimesOfProcesses from './FCFS/TimesOfProcesses';
 
 const router = createBrowserRouter([
   {
@@ -31,6 +32,10 @@ const router = createBrowserRouter([
   {
     path: '/simulation-fcfs',
     element: <SimulationFCFS/>
+  },
+  {
+    path: '/times',
+    element: <TimesOfProcesses/>,
   }
 ]);
 
