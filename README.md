@@ -12,12 +12,18 @@ Multiprogramación (Multiprogramming): La multiprogramación es una técnica que
 
 [Implementacion de multiprogramación](./src/multiprogramming/)
 
+## 🌳 FCFS
+ "First-Come, First-Served", es uno de los algoritmos de planificación de procesos más simples y fundamentales en sistemas operativos y sistemas de administración de tareas. Su funcionamiento es bastante intuitivo: los procesos se ejecutan en el orden en el que llegan a la cola de planificación, y el primero en llegar es el primero en ser atendido. En otras palabras, se da prioridad a los procesos en función de su tiempo de llegada.
+
+[Implementacion de FCFS](./src/FCFS/)
+
 ## Estructura del Proyecto
 
 - `src/`: Contiene los archivos fuente del proyecto.
   - `components/`: Componentes de React utilizados en la interfaz de usuario.
   - `batches1/`: Dentro de esta carpeta se encuentran todos los archivos para la parte del simulador de lotes.
   - `multiprogramming/`: Dentro de esta carpeta se encuentran todos los archivos para la parte del simulador de multiprogramación.
+  - `FCFS/`: Dentro de esta carpeta se encuentran todos los archivos para la parte del simulador del algoritmo de planificación FCFS.
   - `pages/`: Contiene las paginas de la aplicación.
   - `styles/`: Contiene los estilos de los componentes.
   - `index.css`: Estilos globales de la aplicación.
