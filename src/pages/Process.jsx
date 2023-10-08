@@ -28,6 +28,9 @@ const Process = () => {
     if (page === "fcfs") {
       window.location.href = `/simulation-fcfs?${queryParams}`;
     }
+    if (page === "rr") {
+      window.location.href = `/round-robin?${queryParams}`;
+    }
   };
 
   return (
