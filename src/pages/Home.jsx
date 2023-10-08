@@ -17,7 +17,7 @@ const Home = () => {
         <h2>Algoritmo de planificación FCFS</h2>
         <Link to={'/process/fcfs'}>Iniciar</Link>
       </Card>
-      <Card width={300} height={300} direction={"column"} color={"#f8c4cd"}>
+      <Card width={300} height={300} direction={"column"} color={"#c7cfdb"}>
         <h2>Algoritmo de planificación Round Robin</h2>
         <Link to={'/process/rr'}>Iniciar</Link>
       </Card>

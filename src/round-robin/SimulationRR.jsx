@@ -79,7 +79,7 @@ const SimulationRR = () => {
           setSecondsR(currentProcess ? currentProcess.maxTime : 0);
         }
       }
-    }, 1000);
+    }, 1000); // Quantum de 1 segundo
 
     if (
       newProcess.length === 0 &&
@@ -123,8 +123,6 @@ const SimulationRR = () => {
         setCurrentProcess(readyProcess[0] ? readyProcess[0] : newProcess[0]);
       }
     }
-
-    currentProcess ? currentProcess.maxTime * 1000 : 3000;
   }, [
     readyProcess,
     currentProcess,
@@ -141,7 +139,7 @@ const SimulationRR = () => {
       setTimeout(() => {
         esperando = false; // Después de esperar, restablecer la bandera
         resolve();
-      }, 10000); // 10000 milisegundos = 10 segundos
+      }, 5000); // 10000 milisegundos = 10 segundos
     });
 
     // Después de esperar, puedes realizar cualquier tarea que necesites aquí
@@ -270,9 +268,9 @@ const SimulationRR = () => {
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#ff6bb5"}
+            color={"#f5b970"}
           >
-            <h3>Procesos en Nuevos RR</h3>
+            <h3>Procesos Pendientes </h3>
             <h3>{Math.round(newProcess.length)}</h3>
           </Card>
           {/* Elementos restantes del Lote en ejecucion */}
@@ -280,7 +278,7 @@ const SimulationRR = () => {
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#00bfff"}
+            color={"#c7cfdb"}
           >
             <h3>Procesos en Listos</h3>
             {readyProcess.length > 0 ? (
@@ -309,7 +307,7 @@ const SimulationRR = () => {
             height={"fit-content"}
             width={"800px"}
             direction={"row"}
-            color={"#7dfa00"}
+            color={"#00bfff"}
           >
             {paused ? <h3 className="paused">Pausado</h3> : <></>}
             <h2 className="--mainProcess">Proceso en Ejecución</h2>
@@ -320,7 +318,7 @@ const SimulationRR = () => {
             />
 
             <div className="time">
-              {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso */}
+              {/* Mostrar el tiempo restante del proceso y el tiempo transcurrido del proceso 
               <Card
                 height={"fit-content"}
                 width={"fit-content"}
@@ -329,10 +327,11 @@ const SimulationRR = () => {
                 <h3>Tiempo Transcurrido: </h3>
                 <h3>{seconds}</h3>
               </Card>
+              */}
               <Card
                 height={"fit-content"}
                 width={"fit-content"}
-                color={"#ffc105"}
+                color={"#f5b970"}
               >
                 <h3>Tiempo Restante: </h3>
                 <h3>{secondsR}</h3>
@@ -343,7 +342,7 @@ const SimulationRR = () => {
             height={"fit-content"}
             width={"93%"}
             direction={"row"}
-            color={"#ff6b6b"}
+            color={"#d93f3f"}
           >
             <h2>Procesos en Bloqueados</h2>
             {lockedProcess.map((process, index) => (
@@ -375,7 +374,7 @@ const SimulationRR = () => {
         {/* Derecha de la pantalla */}
         <div className="simulation__right">
           {/* Contador Global */}
-          <Card height={"fit-content"} width={"fit-content"} color={"#ff8c00"}>
+          <Card height={"fit-content"} width={"fit-content"} color={"#f5b970"}>
             <GlobalTime
               allBatchesProcessed={allBatchesProcessed}
               segundos={segundos}
@@ -390,7 +389,7 @@ const SimulationRR = () => {
             height={"fit-content"}
             width={"fit-content"}
             direction={"column"}
-            color={"#6c00fa"}
+            color={"#8a99b2"}
           >
             <h3>Procesos Terminados</h3>
             {completedProcess.length > 0 ? (

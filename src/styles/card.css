@@ -17,7 +17,8 @@
     border: none; /* Eliminar el borde por defecto */
     border-bottom: 3px solid #3b4e6d; /* Agregar el borde inferior */
     padding: 5px; /* Agregar un poco de espacio alrededor del texto */
-    outline: none; /
+    outline: none; 
+    width: 7rem;
 }
 
 .card__button{
