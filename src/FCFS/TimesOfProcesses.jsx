@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import queryString from "query-string";
 import { Link, useLocation } from "react-router-dom";
 import Card from "../components/Card";
 import "../styles/times.css";
 
-const TimesOfProcesses = () => {
+const TimesOfProcesses = ({ data }) => { 
+  const [completedProcess, setCompletedProcess] = useState(data);
   const location = useLocation();
-  const queryParams = queryString.parse(location.search);
-  const serializedCompletedProcess = queryParams.completedProcess;
-  const decodedCompletedProcess = JSON.parse(
-    decodeURIComponent(serializedCompletedProcess)
-  );
-  const [completedProcess, setCompletedProcess] = useState(
-    decodedCompletedProcess
-  );
+  useEffect(() => {
+    if (!data) {
+      console.log("No data");
+      const queryParams = queryString.parse(location.search);
+      const serializedCompletedProcess = queryParams.data;
+      const decodedCompletedProcess = JSON.parse(
+        decodeURIComponent(serializedCompletedProcess)
+      );
+      setCompletedProcess(decodedCompletedProcess);
+      console.log(decodedCompletedProcess);
+    }
+  }, []); // El array vacío [] como segundo argumento asegura que el efecto se ejecute solo una vez
 
   const symbols = {
     Addition: "+",
@@ -36,16 +41,16 @@ const TimesOfProcesses = () => {
     <Card
       width={"fit-content"}
       height={"fit-Content"}
-      color={"#00bfff"}
+      color={"#f8e7b9"}
       direction={"row"}
     >
       <h3 className="title">Tiempos de los Procesos</h3>
-      {completedProcess.map((process) => (
+      {completedProcess && completedProcess.map((process) => (
         <Card
           key={process.id}
           width={"fit-content"}
           height={"fit-Content"}
-          color={"#ff6bb5"}
+          color={"#b2b2b2"}
           direction={"column"}
         >
           <div className="card">

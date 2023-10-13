@@ -28,6 +28,9 @@ const Process = () => {
     if (page === "fcfs") {
       window.location.href = `/simulation-fcfs?${queryParams}`;
     }
+    if (page === "fcfs-cont") {
+      window.location.href = `/fcfs-cont?${queryParams}`;
+    }
   };
 
   return (
@@ -39,7 +42,9 @@ const Process = () => {
             ? "#6c8ba7"
             : page === "multiprogramming"
             ? "#70cdb2"
-            : "#d48293"
+            : page === "fcfs"
+            ? "#d48293"
+            : "#f5b9a3"
         }
       >
         {page === "batches" ? (

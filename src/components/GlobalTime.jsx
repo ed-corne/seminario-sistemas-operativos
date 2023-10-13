@@ -6,7 +6,7 @@ const RelojDigital = ({ allBatchesProcessed,  segundos, setSegundos, minutos, se
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      if (!allBatchesProcessed && !paused) {
+      if (!allBatchesProcessed ) {
         // Incrementa el contador de segundos
         setSegundos((prevSegundos) => (prevSegundos + 1) % 60);
 
