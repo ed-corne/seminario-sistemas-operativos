@@ -289,7 +289,13 @@ const SimulationImproved = () => {
       <div>
         {isOpen && (
           <div className="modal">
-            <TimesOfProcesses data={completedProcess}></TimesOfProcesses>
+            <TimesOfProcesses
+              data={completedProcess}
+              readyList={readyProcess}
+              newList={newProcess}
+              lockedList={lockedProcess}
+              current={currentProcess}
+            ></TimesOfProcesses>
           </div>
         )}
       </div>
