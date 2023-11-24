@@ -10,7 +10,6 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProcessBatches from './multiprogramming/ProcessBatches';
 import SimulationFCFS from './FCFS/SimulationFCFS';
 import TimesOfProcesses from './FCFS/TimesOfProcesses';
-import SimulationImproved from './improved-fcfs/SimulationImproved';
 
 const router = createBrowserRouter([
   {
@@ -37,10 +36,6 @@ const router = createBrowserRouter([
   {
     path: '/times',
     element: <TimesOfProcesses/>,
-  },
-  {
-    path: '/fcfs-cont',
-    element: <SimulationImproved/>
   }
 ]);
 

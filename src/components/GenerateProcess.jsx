@@ -33,7 +33,7 @@ const GenerateProcess = (props) => {
         operation: operations[randomNumber(0, operations.length)],
         number1: randomNumber(0, 10000),
         number2: randomNumber(0, 10000),
-        maxTime: randomNumber(6, 19),
+        maxTime: randomNumber(1, 5),
         idProgram: i + 1,
         error: false,
         arrivalTime: 0,
@@ -103,12 +103,12 @@ const GenerateProcess = (props) => {
             disabled={isDisabled}
             onChange={(e) => setNumber2(e.target.value)}
           />
-          <label className="card__label">Tiempo Maximo Estimado (TME)</label>
+          <label className="card__label">Quantum</label>
           <input
             type="number"
-            placeholder="3"
+            placeholder="1 segundo"
             className="card__input"
-            value={maxTime}
+            value={"1 segundo"}
             disabled={isDisabled}
             onChange={(e) => setMaxTime(e.target.value)}
           />

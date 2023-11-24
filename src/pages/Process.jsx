@@ -28,9 +28,6 @@ const Process = () => {
     if (page === "fcfs") {
       window.location.href = `/simulation-fcfs?${queryParams}`;
     }
-    if (page === "fcfs-cont") {
-      window.location.href = `/fcfs-cont?${queryParams}`;
-    }
   };
 
   return (
