@@ -10,6 +10,9 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import ProcessBatches from './multiprogramming/ProcessBatches';
 import SimulationFCFS from './FCFS/SimulationFCFS';
 import TimesOfProcesses from './FCFS/TimesOfProcesses';
+import SimulationImproved from './simple-pagination/SimulationImproved.jsx';
+import SimulationImproved2 from './improved-fcfs/SimulationImproved.jsx';
+import SimulationRR from './round-robin/SimulationRR.jsx'
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,18 @@ const router = createBrowserRouter([
   {
     path: '/times',
     element: <TimesOfProcesses/>,
+  },
+  {
+    path: '/simple-pagination',
+    element: <SimulationImproved/>,
+  },
+  {
+    path: '/improved-fcfs',
+    element: <SimulationImproved2/>,
+  },
+  {
+    path: '/round-robin',
+    element: <SimulationImproved2/>,
   }
 ]);
 

@@ -7,14 +7,11 @@ import Center from "./Center";
 import Right from "./Right";
 import { handleKeyPress } from "../components/Utils";
 import TimesOfProcesses from "../FCFS/TimesOfProcesses";
-import Table from "../simple-pagination/Table";
+import { data } from "./data";
+import Table from "./Table";
 
 const SimulationImproved = () => {
-  // get the batches from the props
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search);
-  const serializedBatches = queryParams.batches;
-  const decodedBatches = JSON.parse(decodeURIComponent(serializedBatches));
+  const decodedBatches = data;
   // lists of processes of diferent states
   const [newProcess, setNewProcess] = useState(decodedBatches.slice(3));
   const [readyProcess, setReadyProcess] = useState(decodedBatches.slice(1, 3));
@@ -40,15 +37,45 @@ const SimulationImproved = () => {
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // Función para actualizar un valor en específico
-  const actualizarValor = (indice, nuevoValor) => {
-    // Crear una copia del array actual
-    const nuevoArray = [...pages];
-    // Actualizar el valor en el índice específico
-    nuevoArray[indice] = nuevoValor;
-    // Establecer el nuevo estado
-    setPages(nuevoArray);
-  };
+  const [pages, setPages] = useState([
+    "S.O.",
+    "S.O.",
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+  ]);
+  const [pagesCont, setPagesCont] = useState(2);
 
   useEffect(() => {
     if (currentProcess && seconds === 0) {
@@ -99,6 +126,9 @@ const SimulationImproved = () => {
             currentProcess,
           ]);
 
+          actualizarValor(pagesCont, "Completado");
+          setPagesCont(pagesCont + 1);
+
           // Eliminar el proceso actual de la cola
           setReadyProcess((prev) => prev.slice(1));
           setNewProcess((prev) => prev.slice(1));
@@ -124,6 +154,16 @@ const SimulationImproved = () => {
     lockedProcess,
   ]);
 
+  // Función para actualizar un valor en específico
+  const actualizarValor = (indice, nuevoValor) => {
+    // Crear una copia del array actual
+    const nuevoArray = [...pages];
+    // Actualizar el valor en el índice específico
+    nuevoArray[indice] = nuevoValor;
+    // Establecer el nuevo estado
+    setPages(nuevoArray);
+  };
+
   const errorProcess = () => {
     setReadyProcess((prev) => prev.slice(1));
     setNewProcess((prev) => prev.slice(1));
@@ -132,6 +172,9 @@ const SimulationImproved = () => {
     currentProcess.returnTime =
       currentProcess.returnTime + segundos + minutos * 60;
     setCompletedProcess((prevCompleted) => [...prevCompleted, currentProcess]);
+
+    actualizarValor(pagesCont, "Error");
+    setPagesCont(pagesCont + 1);
 
     if (newProcess[0] && lockedProcess.length < 2) {
       newProcess[0].waitTime = minutos * 60 + segundos;
@@ -301,13 +344,9 @@ const SimulationImproved = () => {
       <div>
         {isOpen && (
           <div className="modal">
-            <TimesOfProcesses
-              data={completedProcess}
-              readyList={readyProcess}
-              newList={newProcess}
-              lockedList={lockedProcess}
-              current={currentProcess}
-            ></TimesOfProcesses>
+            <div>
+              <Table pages={pages} setPages={setPages}></Table>
+            </div>
           </div>
         )}
       </div>

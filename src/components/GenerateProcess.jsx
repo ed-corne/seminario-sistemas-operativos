@@ -6,7 +6,7 @@ const GenerateProcess = (props) => {
   const [operation, setOperation] = useState("Addition");
   const [number1, setNumber1] = useState(0);
   const [number2, setNumber2] = useState(0);
-  const [processNumber, setProcessNumber] = useState(0);
+  const [processNumber, setProcessNumber] = useState(34);
   const [maxTime, setMaxTime] = useState(0);
   const [idProgram, setIdProgram] = useState(0);
 
@@ -45,7 +45,6 @@ const GenerateProcess = (props) => {
       };
       setBatches((prevQueue) => [...prevQueue, newProcess]);
     }
-
   };
   const operations = [
     "Addition",
@@ -122,8 +121,9 @@ const GenerateProcess = (props) => {
             placeholder="0"
             className="card__input"
             value={processNumber}
-            disabled={isDisabled}
+            disabled={true  }
             onChange={(e) => setProcessNumber(e.target.value)}
+            
           />
           <button onClick={handleCapture}>Generar Trabajos</button>
         </>

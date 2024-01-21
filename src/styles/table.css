@@ -1,0 +1,53 @@
+.mi-contenedor {
+    column-count: 3;
+    column-gap: 20px; /* Espacio entre las columnas, ajusta según sea necesario */
+  }
+
+/* Estilos básicos para la tabla */
+.mi-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.mi-tabla th,
+.mi-tabla td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.mi-tabla th {
+  background-color: #414141;
+}
+
+.mi-tabla tbody tr {
+    break-inside: avoid-column; /* Evitar que una fila se divida en dos columnas */
+  }
+
+/* Estilos para resaltar las filas impares 
+.mi-tabla tbody tr:nth-child(odd) {
+  background-color: #5a5a5a;
+}*/
+
+/* Estilos para resaltar las filas al pasar el ratón sobre ellas */
+.mi-tabla tbody tr:hover {
+  background-color: #e5e5e5;
+}
+/* Estilos para los dos primeros elementos */
+.mi-tabla tbody tr:nth-child(1),
+.mi-tabla tbody tr:nth-child(2) {
+  background-color: #485e44; /* Puedes cambiar este color según tus preferencias */
+}
+
+.error {
+  background-color: #6d3535;
+}
+
+.correct {
+  background-color: #35646d;
+}
+
+.empty {
+    background-color: #535353;
+}

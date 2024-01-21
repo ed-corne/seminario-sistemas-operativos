@@ -42,8 +42,8 @@ export const handleKeyPress = (
       case "n":
         addProcess();
         break;
-      case "B":
-      case "b":
+      case "M":
+      case "m":
         showTable();
       default:
         break;

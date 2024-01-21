@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const Home = () => {
   return (
     <Card width={"fit-content"} height={"fit-content"}>
+      <h1 className="main_title">Planificadores </h1>
       <Card width={300} height={300} direction={"column"} color={"#a8c5eb"}>
         <h2>Procesamiento por Lotes</h2>
         <Link to={"/process/batches"}>Iniciar</Link>
@@ -25,7 +26,10 @@ const Home = () => {
       <Card width={300} height={300} direction={"column"} color={"#c7cfdb"}>
         <h2>Algoritmo de planificación Round Robin</h2>
         <Link to={"/process/rr"}>Iniciar</Link>
-        round-robin
+      </Card>
+      <Card width={300} height={300} direction={"column"} color={"#c8a8eb"}>
+        <h2>Algoritmo de Paginación Simple</h2>
+        <Link to={"/process/simple"}>Iniciar</Link>
       </Card>
     </Card>
   );

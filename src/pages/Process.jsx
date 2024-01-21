@@ -28,6 +28,15 @@ const Process = () => {
     if (page === "fcfs") {
       window.location.href = `/simulation-fcfs?${queryParams}`;
     }
+    if (page === "fcfs-cont") {
+      window.location.href = `/improved-fcfs?${queryParams}`;
+    }
+    if (page === "rr") {
+      window.location.href = `/round-robin?${queryParams}`;
+    }
+    if (page === "simple") {
+      window.location.href = `/simple-pagination?${queryParams}`;
+    }
   };
 
   return (
